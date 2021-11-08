@@ -16,13 +16,14 @@ library(raster)
 #we are going to exit R (using the quads)
 
 setwd("/Users/sarapiccini/Desktop/lab") 
-
-#GRD mens greed
+#set the working directory everytime you use raster
+#GRD mens greed 
 # index with valus
 #model to create this file
 #HDR stating what is the name of the file and its info
 #SDX
-#we are going to import satallite data, PUTTING QUADS BECAUSE WE ARE GOING TO CATCH DATA OUTSIDE R
+#we are going to import satallite data, PUTTING QUADS BECAUSE WE ARE GOING TO CATCH DATA OUTSIDE R (from the working directory) 
+#and using brick function: raterbricck (multi-layer) 
 
 l2011 <- brick("p224r63_2011.grd")
 
@@ -36,7 +37,7 @@ l2011 <- brick("p224r63_2011.grd")
 #1 band with pizels , 1499 rows 2967 columns, 4447533 pixels, 7 layers (4 million time 7) 28 millions of pixels (data using)
 #extent: meters
 #source:
-#bands: sre(
+#bands: sre(sensors)
 #reflectance: ratio between tha amount of the reflected energy
 #the higer will be the reflectance the higher will be the amount of light catch by a sensor
 
@@ -131,4 +132,57 @@ plot(l2011$B2_sre, col=clg)
 par(mfrow=c(2,1))
 plot(l2011$B2_sre, col=clg)
 plot(l2011$B1_sre, col=clb)
+
+plot(l2011$B1_sre) #image of the reflectans of the pixels of the landscape in the blue
+#change colors to see better: plot the blue band using a blue colorRampPalette
+clb <- colorRampPalette(c("dark blue", "blue", "light blue")) (100)
+#build a multiframe: build a multi-plot: 1 row of plots and 2 colomns. Plot the blue and the green besides, with different colorRampPalette
+par(mfrow=c(1,2))
+plot(l2011$B1_sre, col=clb)
+plot(l2011$B2_sre, col=clg)
+
+#plot the blue and green besides, with different colorRampPalette
+par(mfrow=c(2,1))
+clb <- colorRampPalette(c("dark blue","blue","light blue"))(100)
+plot(l2011$B1_sre, col=clb)
+clg <- colorRampPalette(c("dark green","green","light green"))(100)
+plot(l2011$B2_sre, col=clg)
+#plot the first four bands with 2 rows and 2 columns (plot all bands)
+par(mfrow=c(2,2))
+clb <- colorRampPalette(c("dark blue","blue","light blue"))(100)
+plot(l2011$B1_sre, col=clb)
+clg <- colorRampPalette(c("dark green","green","light green"))(100)
+plot(l2011$B2_sre, col=clg)
+clr <- colorRampPalette(c("dark red", "red", "pink"))(100)
+plot(l2011$B3_sre, col=clr)
+clnir <- colorRampPalette(c("red", "orange", "yellow"))(100)
+plot(l2011$B4_sre, col=clnir)
+
+#RGB composition of colors: 3 main colors(red green blue) and then you mix them to obtain the others
+#function to clean: close the plot device: dev.off
+dev.off()
+#plotRGB: put the satellite image and then the different layers (the red, blue and green chanel with the correspondent bands)
+plotRGB(l2011, r=3, g=2, b=1, stretch="Lin") #natural colours
+#stretch argument: stretching the values to let us see the colors better
+#to extend our view to the infra-red: plants:huge reflectans in the near-infrared
+#switch from band 1,2,3, to band 2,3,4 to use infra-red band shifting by one
+plotRGB(l2011, r=4, g=3, b=2, stretch="Lin") #false colours
+#vegetation is red now becase of the near-infrared band in which vegetation reflects a lot
+#now we can see some part changed and the agricultural area besides the forest
+#to change the chanel in which we are going to put the near infra-red:
+plotRGB(l2011, r=3, g=4, b=2, stretch="Lin")
+#now we see very fluo green, and now we can see better umidity, where water in passing in the forest and in violet agricultural soil
+plotRGB(l2011, r=3, g=2, b=4, stretch="Lin")
+#to see how much deforestation, all of the bear soil = yellow parts 
+
+#multiframe with these immages
+par(mfrow=c(2,2))
+plotRGB(l2011, r=3, g=2, b=1, stretch="Lin")
+plotRGB(l2011, r=4, g=3, b=2, stretch="Lin")
+plotRGB(l2011, r=3, g=4, b=2, stretch="Lin")
+plotRGB(l2011, r=3, g=2, b=4, stretch="Lin")
+#exploratory analysis
+#multi-temporal analysis: how the situation has changed from the past (1988-2021)
+
+
 
