@@ -184,5 +184,34 @@ plotRGB(l2011, r=3, g=2, b=4, stretch="Lin")
 #exploratory analysis
 #multi-temporal analysis: how the situation has changed from the past (1988-2021)
 
+#final day on this tropical forest reserve
+plotRGB(l2011, r=4, g=3, b=2, stretch="Lin")
+#strech to visualize data
+#linear stretch : from 0 to 1: to allow our eyes to better see the colours 
+#plants absorb blue and red and reflect green and near-infrared
+
+#another function 
+#instead of using a line we can enhance the function
+#histogram strectch is the name of the function with "S" shape curve
+plotRGB(l2011, r=4, g=3, b=2, stretch="Hist")
+
+#import data from 1988
+#use the brick function
+l1988 <- brick("p224r63_1988.grd")
+l1988
+#quads since we are exiting R
+#we have the same bands and the same resolution as before
+#to plot them in the same window (2 rows and 1 column) we use he multi-frame using par function
+par(mfrow=c(2,1))
+plotRGB(l1988, r=4, g=3, b=2, stretch="Lin")  
+plotRGB(l2011, r=4, g=3, b=2, stretch="Lin")
+#monitoring on how things change in time
+#in 1988 the forest was there, then they started build agricultural area and in 2011 we have several parts related to agriculture.
+
+#make use of NIR in other wavelands. If we put the NIR (near infra-red) in the blue channel which become yellow
+par(mfrow=c(2,1))
+plotRGB(l2011, r=2, g=3, b=4, stretch="Lin")
+plotRGB(l1988, r=2, g=3, b=4, stretch="Lin")
+
 
 
