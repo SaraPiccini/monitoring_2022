@@ -73,4 +73,43 @@ plot(EN$EN_0001, col=cl)
 #function to plot RGB
 plotRGB(EN, r=1, g=7, b=13, stretch="lin") #3 different layers in time
 
+# day 2
 
+#EN folder: import data all together 
+#direct import
+#use laplly function: apply a function over a list of vector (arrey of images: need the list to which apply another function
+#make the list with function: list.files in the directory
+#path: where the files are located
+#pattern: common pattern of the images (ex: common name of the images: not the extenction)
+#setting the working directory we can remove path from the function: we need only the common part of the name of the files 
+
+library(raster)
+#set the working directory to work with EN folder since the images are there
+setwd("/Users/sarapiccini/Desktop/lab/EN") 
+#the first part of the name "EN" is the same: we will use it for pattern. Use quads since we are exiting R
+rlist <- list.files(pattern="EN")
+#stor the list in an object with a name using arrow to assign the name to the list.files function
+rlist
+#apply the function "lapply" to the list with the "raster" function as the function to the list
+list_rast <- lapply(rlist, raster)
+list_rast
+#now we have the files one after the others (1-13) imported
+#use stack function to stack all the files together 
+#we are stuck images using the list we made (all files imported) stck all together 
+
+EN_stack <- stack(list_rast) 
+EN_stack
+cl <- colorRampPalette(c('red','orange','yellow'))(100) 
+plot(EN_stack, col=cl)
+#plot only the first image of the stuck:
+plot(EN_stack$EN_0001, col=cl)
+#difference between first and 13th image:
+ENdif <- EN_stack$EN_0001 - EN_stack$EN_0013
+cldif <- colorRampPalette(c('blue','white','red'))(100) 
+plot(ENdif, col=cldif)
+
+# automated processing Source function: read R code from a file, a connection or expression
+# cose in internet or in computer link with R and run the code directly 
+# construct the script in Word (with comments to understand what to do with the functions)  to run it directly on R
+
+source("R_code_automatic_script.r")
