@@ -112,4 +112,5 @@ plot(ENdif, col=cldif)
 # cose in internet or in computer link with R and run the code directly 
 # construct the script in Word (with comments to understand what to do with the functions)  to run it directly on R
 
-source("R_code_automatic_script.r")
+source("R_code_automatic_script.txt")
+#remember to put always "setwd" as a comment in txt to make R able to read the txt 
