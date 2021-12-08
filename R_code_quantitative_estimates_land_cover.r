@@ -85,9 +85,9 @@ ggplot(proportion1992, aes(x=cover, y=prop1992, color=cover)) + geom_bar(stat="i
 
 #day 2
 library(raster)
-> library(RStoolbox)
-> library(ggplot2)
-> setwd("/Users/sarapiccini/Desktop/lab")
+library(RStoolbox)
+library(ggplot2)
+setwd("/Users/sarapiccini/Desktop/lab")
 rlist <- list.files(pattern="defor")
 rlist
 #[1] "defor1_.jpg" "defor2_.jpg"
@@ -105,8 +105,7 @@ freq(l1992c$map)
 #     value  count
 #[1,]     1  35300
 #[2,]     2 305992
-> total <- 341292
-
+total <- 341292
 propagri <- 35300 / 341292
 propforest <- 305992 / total
 propagri = 0.1034305 #~ 0.10
@@ -114,14 +113,14 @@ propforest = 0.8965695 #~ 0.90
 #build a datafram 
 cover <- c("Forest", "Agriculture")
 prop1992 <- c(propforest, propagri) #istead of putting the number, we put objects
-> proportion1992 <- data.frame(cover, prop1992) #propootions of pixels in 1992
-> proportion1992
-        cover  prop1992
-1      Forest 0.8965695
-2 Agriculture 0.1034305
-> ggplot(proportion1992, aes(x=cover, y=prop1992, color=cover)) + geom_bar(stat="identity", fill="white")
-> l2006c <- unsuperClass(l2006, nClasses=2) 
-> l2006c
+proportion1992 <- data.frame(cover, prop1992) #propootions of pixels in 1992
+proportion1992
+#        cover  prop1992
+#1      Forest 0.8965695
+#2 Agriculture 0.1034305
+ggplot(proportion1992, aes(x=cover, y=prop1992, color=cover)) + geom_bar(stat="identity", fill="white")
+l2006c <- unsuperClass(l2006, nClasses=2) 
+l2006c
 
 plot(l2006c$map)
 freq(l2006c$map)
@@ -159,12 +158,12 @@ cover <- c("Forest", "Agriculture")
 prop2006 <- c(propforest2006, propagri2006) #instead of putting the number, we put objects (always better to use it instead of numbers)
 proportion2006 <- data.frame(cover, prop2006) #propootions of pixels in 1992
 proportion2006 
-        cover  prop2006
+#        cover  prop2006
 #1      Forest 0.5208125
 #2 Agriculture 0.4791875
 proportion <- data.frame(cover, prop1992, prop2006)
 proportion
- #       cover  prop1992  prop2006
+#       cover  prop1992  prop2006
 #1      Forest 0.8965695 0.5208125
 #2 Agriculture 0.1034305 0.4791875
 
