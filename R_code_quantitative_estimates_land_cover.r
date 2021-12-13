@@ -3,8 +3,9 @@ R_code_quantitative_estimates_land_cover
 # forest: amount of cluster of trees, 3D structure forest
 # package use
 library(raster)
-library(RStoolbox)
-library(ggplot2)
+library(RStoolbox) #to make the classification
+library(ggplot2) #for the ggplot function
+librart(grid.Extra)# for multiframe ggplot
 setwd("/Users/sarapiccini/Desktop/lab")
 
 #brick
@@ -176,3 +177,59 @@ library(gridExtra)
 p1 <- ggplot(proportion1992, aes(x=cover, y=prop1992, color=cover)) + geom_bar(stat="identity", fill="white")
 p2 <- ggplot(proportion2006, aes(x=cover, y=prop2006, color=cover)) + geom_bar(stat="identity", fill="white")
 grid.arrange(p1, p2, nrow=1)
+
+
+# day 3
+# brick
+# 1 list the files available
+rlist <- list.files(pattern="defor")
+rlist
+# 2 lapply: apply a function to a list
+list_rast <- lapply(rlist, brick) # lapply(x, FUN)
+list_rast
+total <- 341292
+propagri <- 34710/total
+propforest <- 306582/total
+total <- 341292
+#build a dataframe
+cover <- c("Forest", "Agriculture")
+# prop1992 <- c(0.8982982, 0.1017018)
+prop1992 <- c(propforest, propagri)
+proportion1992 <- data.frame(cover, prop1992)
+prop1992
+#[1] 0.8982982 0.1017018
+ggplot(proportion1992, aes(x=cover, y=prop1992, color=cover)) + geom_bar(stat="identity", fill="white")
+#classification
+total2006 <- 342726
+propagri2006 <- 163352/total2006
+propforest2006 <- 179374/total2006
+#datafram for prop: cover, proportions1992, proportions 2006 (3 columns, 2 rows)
+# build a dataframe
+cover <- c("Forest", "Agriculture")
+prop1992 <- c(propforest, propagri)
+prop2006 <- c(propforest2006, propagri2006)
+proportion <- data.frame(cover, prop1992, prop2006)
+proportion
+#make ggplot assign each ggplot to object
+p1 <- ggplot(proportion, aes(x=cover, y=prop1992, color=cover)) + geom_bar(stat="identity", fill="white") + ylim(0,1)
+p2 <- ggplot(proportion, aes(x=cover, y=prop2006, color=cover)) + geom_bar(stat="identity", fill="white") + ylim(0,1)
+#2 ggplot stored in two objects, the grid arrange function plot the two ggplot close in one picture 
+#plot 2 grapsh with gridExtra package:
+grid.arrange(p1, p2, nrow=1)
+#ylim = limit of y from 0 to 1 
+#one on top of the other= nrows=2
+
+#install another package called patchwork: 
+install.packages("patchwork")
+library(patchwork)
+# put one plot beside the other : the syntax is just the plus : p1 + p2 
+#plot 2 grapsh with patchwork package:
+p1+p2
+#to put one on top of the other: ratio (/)
+p1/p2
+
+#patchwork is working even with raster data but they should be plotted with GGplot function (ggRGB)
+l1992 <- list_rast[[1]]
+l1992
+
+
