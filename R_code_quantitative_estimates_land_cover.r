@@ -228,8 +228,37 @@ p1+p2
 #to put one on top of the other: ratio (/)
 p1/p2
 
-#patchwork is working even with raster data but they should be plotted with GGplot function (ggRGB)
+#patchwork is working even with raster data but they should be plotted with GGplot function (ggRGB function part of RStoolbox package)
 l1992 <- list_rast[[1]]
 l1992
-
+#instead of using plot RGB we are going to use ggRGB
+#common staff: 
+plotRGB(l1992, r=1, g=2, b=3, stretch="Lin") 
+#ggRGB function: take an image, put 3 components 
+ggRGB(l1992, r=1, g=2, b=3) #it puts also the coordinates
+#now we play with the stretch:
+ggRGB(l1992, r=1, g=2, b=3, stretch="lin") #the image is pretty similar
+#histogram stretch:
+ggRGB(l1992, r=1, g=2, b=3, stretch="hist") #it shows additional characteristics to the image
+#we can see orizontal lines over the image: beause it's not a photo, it's an image taken by a scanner: we can see the lines of the scanner
+#play with square root that compacts data
+ggRGB(l1992, r=1, g=2, b=3, stretch="sqrt") #compact data to remove extreme data 
+#in R log is natural logarithm (base e)
+ggRGB(l1992, r=1, g=2, b=3, stretch="log") #compact data
+# to see all these graph all together: patchwork
+#first assign name to graphs:
+gp1 <- ggRGB(l1992, r=1, g=2, b=3, stretch="lin")
+gp2 <- ggRGB(l1992, r=1, g=2, b=3, stretch="hist")
+gp3 <- ggRGB(l1992, r=1, g=2, b=3, stretch="sqrt")
+gp4 <- ggRGB(l1992, r=1, g=2, b=3, stretch="log")
+#in one line:
+gp1 + gp2 + gp3 + gp4
+# multitemporal patchwork
+#first declare the second image:
+l2006 <- list_rast[[2]]
+l2006
+gp1 <- ggRGB(l1992, r=1, g=2, b=3)
+gp5 <- ggRGB(l2006, r=1, g=2, b=3)
+gp1 + gp5 
+gp1 / gp5
 
