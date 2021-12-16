@@ -34,4 +34,6 @@ ggplot() + geom_raster(DryMatterProd2020, mapping = aes(x=x, y=y, fill=Dry.matte
 ggplot() + geom_raster(DryMatterProd2020, mapping = aes(x=x, y=y, fill=Dry.matter.productivity.1KM)) + scale_fill_viridis(option="cividis") + ggtitle("cividis palette")
 #the default one is sividis and we do not put anything inside the () sinche it is the defaul, we put option "" to choose any different color palette
 
+#download other data from the same folder but different time
+
 
