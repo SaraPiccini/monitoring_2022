@@ -76,7 +76,8 @@ p1 <- ggplot() + geom_raster(dmsummer2020_cropped, mapping = aes(x=x, y=y, fill=
 p2 <- ggplot() + geom_raster(dmsummer2019_cropped, mapping = aes(x=x, y=y, fill=Dry.matter.productivity.1KM.2)) + scale_fill_viridis() + ggtitle("Dry matter productivity during summer 2019")
 p1 / p2
 
-#reference system
+#coordinates reference system WGS84 <- match data with same reference system otherwise they are not going to match
+
 
 
 
