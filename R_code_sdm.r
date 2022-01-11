@@ -64,6 +64,37 @@ points(presences, pch=19) #where there is vegetation cover and the species avoid
 plot(preds$precipitation, col=cl)
 points(presences, pch=19) #distribution of the species: medium intermediate precipitation level
 
-#model: 
+# day 2
+#importing the source script
+#set working directory to upload the entire script
+setwd("/Users/sarapiccini/Desktop/lab/")
+
+source("R_code_source_sdm.r")
+#source function: read R code from a file - quads for outside-R file
+#in the theoretical slide of SDMs we schould use individuals of a species and predictors
+preds #predicotrs imported: elevation, precipitation, temperature, vegetation
+
+#to do the model we explain to the software the data we are going to use
+#training data (species data) we tell the model where the species are 
+#sdmData create sdm Data object
+#let's explain to the model what are the training and predictors data
+datasdm <- sdmData(train=species, predictors=preds)
+#train=species: data we have imported with presences and absences 
+#explanatory variables:another word used for predictors (explain a variable-direct correlation)
+datasdm
+#class=description of a certain object(ex:class of table:dataframe)
+#features:predictors
+#sdm function: fit and evaluate species distribution model
+#linear model:lm 
+m1 <- sdm(Occurrence~temperature+elevation+precipitation+vegetation, data=datasdm, methods = "glm")
+#variable use ad y:occurrence, ~:math equal, variable use as xs:T, elevation, precipitation, vegetation
+#the model will calculate slope(b) and intecept(a) of the straight line: y=bx+a, y2=b2x2+a, y3=b3x3+a..
+#data we use:datasdm and finally we need the method to use to build the model (linear model)
+#generalized linear model when dealing with more variables all normally distributed (assumption) as in this case
+#GAM:generalize additive model (non parametric models): for non-normally distributed variables
+m1
+#array/vector of methods to usemore methods at once
+#the model produced slope and intercept, now we use this model and make prediction: for each pixel what is the probability of presence based on the line(method, prediction)
+#corresponding each slope to each predictors -> final prediction of presence of species in space
 
 
