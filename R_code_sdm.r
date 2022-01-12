@@ -97,4 +97,33 @@ m1
 #the model produced slope and intercept, now we use this model and make prediction: for each pixel what is the probability of presence based on the line(method, prediction)
 #corresponding each slope to each predictors -> final prediction of presence of species in space
 
+#predict the speed of spreading of a species in a certain area
+#applay the formula y=bx+a starting from the parameters, to the 4 predictors to have the final prediction
+#if you make a model than you can make a prediction with this function:
+p1 <- predict(m1, newdata=preds) #map probability (prediction)
+p1
+#explain model we are using. Applay the parameters of the model to predictors
+#it is a raster layer. plot the prediction:
+plot(p1, col=cl) #preiction of the probability of the presence of species
+#goodness of feed: plot the presencies and we can expect that some part of the model will be more or less good.
+points(presences, pch=19)
+#plot preferences together with p1 with this function to add points into the picture
+#we have the prediction of the presence of the species: located in the part of high probability to find it so the model is good
+#on the west the model is not in line with original data, we can see some indidivuals: there could be additional predictors important 
+#for the species and we are not considering them
+#probability of occurrence in the map
+
+#final stack with everything all together
+s1 <- stack(preds, p1)
+s1
+plot(s1, col=cl)
+#you can find species in the yellow probability (yellow color for the higher value of what you want to see)
+#change the name of s1 - reassign the name to the new array:
+names(s1) <- c('Elevation', 'Precipitation', 'Temperature', 'Vegetation', 'Model')
+plot(s1, col=cl) 
+#now the picture is called model
+names(s1) <- c('Elevation', 'Precipitation', 'Temperature', 'Vegetation', 'Probability')
+plot(s1, col=cl)
+#we can put any names and make any change we wont to rename the pictures
+#this type of model can be applied to any variables
 
