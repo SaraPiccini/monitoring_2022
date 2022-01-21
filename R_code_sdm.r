@@ -10,7 +10,6 @@ library(rgdal) #geospatial data abstraction library - species - coordinate data 
 file <- system.file("external/species.shp", package="sdm") #species data (path, package used and name it) 
 #shp extention: shape file-point related to the species(presence-absence)
 #prj = info about coordinate system of out data UTM-zones
-#dbf = 
 #shx = links every data to a line
 #explain the name of the file we are taking the files
 #path in which we have the data:"/Library/Frameworks/R.framework/Versions/4.1/Resources/library/sdm/external/species.shp"
