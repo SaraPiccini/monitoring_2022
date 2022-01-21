@@ -90,10 +90,9 @@ library(RStoolbox)
 library(ggplot2)
 setwd("/Users/sarapiccini/Desktop/lab")
 rlist <- list.files(pattern="defor")
-rlist
-#[1] "defor1_.jpg" "defor2_.jpg"
-#list_rast <- lapply(rlist, brick) #lapply(x, FUN)
-#list_rast
+rlist #[1] "defor1_.jpg" "defor2_.jpg"
+list_rast <- lapply(rlist, brick) #lapply(x, FUN)
+list_rast
 l1992 <- list_rast[[1]]
 l1992
 l2006 <- list_rast[[2]]
@@ -132,7 +131,7 @@ total <- 342726
 propagri <- 164230 / 342726
 propforest <- 178496 / total
 propagri
-#[1] 0.4791875
+# = 0.4791875
 propforest
 #[1] 0.5208125
 propagri = 0.4791875
