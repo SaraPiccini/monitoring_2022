@@ -1,0 +1,16 @@
+# install and import all the library 
+# install.packages("ncdf4")
+# install.packages("raster")
+# install.packages("viridis")
+# install.packages("RStoolbox")
+# install.packages("ggplot2")
+# install.packages("patchwork")
+# install.packages("rgdal")
+library(ncdf4) # import the copernicus file (in nc)
+library(raster) # work with raster file (single layer data)
+library(viridis) # plot the color palette
+library(RStoolbox) # useful for remote sensing image processing 
+library(ggplot2)  # create graphics 
+library(patchwork) # multiframe graphics
+library(rgdal) # to open shape file
+#set the working directory
