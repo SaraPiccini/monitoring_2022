@@ -5,7 +5,7 @@ R_code_quantitative_estimates_land_cover
 library(raster)
 library(RStoolbox) #to make the classification
 library(ggplot2) #for the ggplot function
-librart(grid.Extra)# for multiframe ggplot
+library(grid.Extra)# for multiframe ggplot
 setwd("/Users/sarapiccini/Desktop/lab")
 
 #brick
