@@ -6,11 +6,77 @@
 # install.packages("ggplot2")
 # install.packages("patchwork")
 # install.packages("rgdal")
+# library("grid.Extra")
 library(ncdf4) # import the copernicus file (in nc)
 library(raster) # work with raster file (single layer data)
 library(viridis) # plot the color palette
-library(RStoolbox) # useful for remote sensing image processing 
-library(ggplot2)  # create graphics 
+library(RStoolbox) # useful for remote sensing image processing (make classification)
+library(ggplot2) # create graphics - ggplot function
+library(grid.Extra) # for multiframe ggplot
 library(patchwork) # multiframe graphics
 library(rgdal) # to open shape file
+
 #set the working directory
+setwd("/Users/sarapiccini/Documents/datasnow")
+
+#import data together 
+SCE <- list.files(pattern="SCE")
+SCE
+# apply raster function to all the files
+snowraster <- lapply(SCE, raster)
+
+snow18 <- plot(snowraster[[1]])
+snow19 <- plot(snowraster[[2]])
+snow20 <- plot(snowraster[[3]])
+snow21 <- plot(snowraster[[4]])
+
+snowcover <- stack(snowraster)
+plot(snowcover)
+cl <- colorRampPalette(c("blue","light blue","pink","red"))(100)
+plot(snowcover, col=cl)
+
+
+LST <- list.files(pattern="LST")
+LST
+
+Traster <- lapply(LST, raster)
+
+temp <- stack(Traster)
+plot(temp)
+
+
+clt <- colorRampPalette(c("yellow","pink","red","dark red"))(100)
+plot(temp, col=clt)
+
+names() = 
+
+ext2 <- c(50, 150, 50, 80)
+cropped2 <- crop(snowcover, ext2)
+plot(cropped2, col=cl)
+Snow Cover Jenuary 2018
+
+snowcover[["Snow.Cover.Jenuary.2018"]]
+
+p1 <- ggplot() + geom_raster(cropped2, mapping = aes(x=x, y=y, fill= "cropped2")) + scale_fill_viridis(option="viridis") +
+ggtitle("Snow cover 2018")
+
+p2 <- ggplot() +
+geom_raster(cropped2, mapping = aes(x=x, y=y, fill=Snow.Cover.January.2018))
+
+
+
+jan2018 <- cropped2$Snow.Cover.Jenuary.2018
+jan2019 <- cropped2$Snow.Cover.Jenuary.2019
+jan2020 <- cropped2$Snow.Cover.Jenuary.2020
+jan2021 <- cropped2$Snow.Cover.Jenuary.2021
+
+g1 <- ggplot() + geom_raster( data= jan2018, mapping = aes(x=x, y=y, fill= Snow.Cover.Jenuary.2018)) + scale_fill_viridis(option = "mako") + ggtitle("2018")
+g2 <- ggplot() + geom_raster( data= jan2019, mapping = aes(x=x, y=y, fill= Snow.Cover.Jenuary.2019)) + scale_fill_viridis(option = "mako") + ggtitle("2019")
+g3 <- ggplot() + geom_raster( data= jan2020, mapping = aes(x=x, y=y, fill= Snow.Cover.Jenuary.2020)) + scale_fill_viridis(option = "mako") + ggtitle("2020")
+g4 <- ggplot() + geom_raster( data= jan2021, mapping = aes(x=x, y=y, fill= Snow.Cover.Jenuary.2021)) + scale_fill_viridis(option = "mako") + ggtitle("2021")
+
+g1 + g2 + g3 + g4
+
+temp <- stack(Traster)
+plot(temp)
+
