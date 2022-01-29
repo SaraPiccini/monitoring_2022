@@ -1,0 +1,109 @@
+library(ncdf4) # import the copernicus file (in nc)
+library(raster) # work with raster file (single layer data)
+library(viridis) # plot the color palette
+library(RStoolbox) # useful for remote sensing image processing (make classification)
+library(ggplot2) # create graphics - ggplot function
+library(grid.Extra) # for multiframe ggplot
+library(patchwork) # multiframe graphics
+library(rgdal) # to open shape file
+
+#set the working directory
+setwd("/Users/sarapiccini/Documents/datandvi")
+
+#import data together 
+NDVI <- list.files(pattern="NDVI")
+NDVI
+#"c_gls_NDVI_199906110000_GLOBE_VGT_V2.2.1.nc"   
+#"c_gls_NDVI_202006110000_GLOBE_PROBAV_V2.2.1.nc"
+
+# apply raster function to all the files
+NDVIr <- lapply(NDVI, raster)
+NDVIr
+
+NDVIstack <- stack(NDVIr)
+plot(NDVIstack)
+
+ext <- c(-20, 60, -80, 40)
+NDVIcrop <- crop(NDVIstack, ext)
+plot(NDVIcrop)
+NDVIcrop
+
+june1999 <- NDVIcrop$Normalized.Difference.Vegetation.Index.1KM.1
+june2020 <- NDVIcrop$Normalized.Difference.Vegetation.Index.1KM.2
+
+g1 <- ggplot() + geom_raster(data= june1999, mapping = aes(x=x, y=y, fill= Normalized.Difference.Vegetation.Index.1KM.1)) + scale_fill_viridis(option = "magma") + ggtitle("june1999")
+g2 <- ggplot() + geom_raster(data= june2020, mapping = aes(x=x, y=y, fill= Normalized.Difference.Vegetation.Index.1KM.2)) + scale_fill_viridis(option = "magma") + ggtitle("june2020")
+
+g1/g2
+
+NDVIdif<-june2020-june1999
+plot(NDVIdif)
+par(mfrow=c(2,2))
+plot(june1999)
+plot(june2020)
+plot(NDVIdif)
+
+cl= colorRampPalette(c("white", "brown", "blue", "light green", "dark green"))(100)
+plot(NDVIdif, col =cl)
+FCOVER <- list.files(pattern="FCOVER")
+FCOVER
+
+#"c_gls_FCOVER_199905200000_GLOBE_VGT_V2.0.2.nc"       
+#"c_gls_FCOVER-RT1_202006200000_GLOBE_PROBAV_V2.0.1.nc"
+
+FCOVERr <- lapply(FCOVER, raster)
+FCOVERr
+
+FCOVERstack <- stack(FCOVERr)
+plot(FCOVERstack)
+
+
+FCOVERcrop <- crop(FCOVERstack, ext)
+plot(FCOVERcrop)
+FCOVERcrop
+
+FCjune1999 <- FCOVERcrop$Fraction.of.green.Vegetation.Cover.1km.1
+FCjune2020 <- FCOVERcrop$Fraction.of.green.Vegetation.Cover.1km.2
+
+g1FC <- ggplot() + geom_raster(data= FCjune1999, mapping = aes(x=x, y=y, fill= Fraction.of.green.Vegetation.Cover.1km.1)) + scale_fill_viridis() + ggtitle("FCjune1999")
+g2FC <- ggplot() + geom_raster(data= FCjune2020, mapping = aes(x=x, y=y, fill= Fraction.of.green.Vegetation.Cover.1km.2)) + scale_fill_viridis() + ggtitle("FCjune2020")
+
+g1FC/g2FC
+
+FCdif<-FCjune2020-FCjune1999
+plot(FCdif)
+par(mfrow=c(2,2))
+plot(FCjune1999)
+plot(FCjune2020)
+plot(FCdif)
+
+SWI <- list.files(pattern="SWI")
+SWI
+
+SWIr <- lapply(SWI, raster)
+SWIr
+
+SWIstack <- stack(SWIr)
+plot(SWIstack)
+
+SWIcrop <- crop(SWIstack, ext)
+plot(SWIcrop)
+SWIcrop
+
+SWIjune2007 <- SWIcrop$Soil.Water.Index.with.T.5.1
+SWIjune2020 <- SWIcrop$Soil.Water.Index.with.T.5.2
+
+g1SWI <- ggplot() + geom_raster(data= SWIjune2007, mapping = aes(x=x, y=y, fill= Soil.Water.Index.with.T.5.1)) + scale_fill_viridis() + ggtitle("SWIjune2007")
+g2SWI <- ggplot() + geom_raster(data= SWIjune2020, mapping = aes(x=x, y=y, fill= Soil.Water.Index.with.T.5.2)) + scale_fill_viridis() + ggtitle("SWIjune2020")
+
+g1SWI/g2SWI
+
+SWIdif<-SWIjune2020-SWIjune2007
+plot(SWIdif)
+par(mfrow=c(2,2))
+plot(SWIjune2007)
+plot(SWIjune2020)
+plot(SWIdif)
+plot(FCdif)
+
+
