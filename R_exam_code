@@ -12,7 +12,7 @@ library(raster) # work with raster file (single layer data)
 library(viridis) # plot the color palette
 library(RStoolbox) # useful for remote sensing image processing (make classification)
 library(ggplot2) # create graphics - ggplot function
-library(grid.Extra) # for multiframe ggplot
+library(gridExtra) # for multiframe ggplot
 library(patchwork) # multiframe graphics
 library(rgdal) # to open shape file
 
@@ -66,6 +66,22 @@ plot(temp, col=clt)
 
 temp <- stack(Traster)
 plot(temp)
+
+
+#snow cover using modis data
+SNOW <- list.files(pattern="Render")
+SNOWC <- lapply(SNOW, brick)
+
+names(SNOWC) <- c("summer2001","summer2021","winter2001","winter2021")
+
+
+summer2001 <- ggRGB(SNOWC$summer2001, r=1, g=2, b=3, stretch="lin")
+winter2001 <- ggRGB(SNOWC$winter2001, r=1, g=2, b=3, stretch="lin")
+summer2021 <- ggRGB(SNOWC$summer2021, r=1, g=2, b=3, stretch="lin")
+winter2021 <- ggRGB(SNOWC$winter2021, r=1, g=2, b=3, stretch="lin")
+
+
+grid.arrange(winter2001, summer2001, winter2021, summer2021, nrow=2)
 
 
 
