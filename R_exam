@@ -6,6 +6,10 @@ library(ggplot2) # create graphics - ggplot function
 library(gridExtra) # for multiframe ggplot
 library(patchwork) # multiframe graphics
 library(rgdal) # to open shape file
+library(greenbrown) # to use brown green colors function that provides a color scale from brown to green and can be used to plot NDVI trend maps.
+#Positive trends in Normalized Difference Vegetation Index are called 'greening' whereas negative trends are called 'browning
+#How to install it: install.packages("greenbrown2.tar", repos = NULL, type="source")
+#NOT ABLE TO INSTALL IT
 
 #set the working directory
 setwd("/Users/sarapiccini/Documents/datandvi")
@@ -24,6 +28,8 @@ NDVIr
 
 NDVIstack <- stack(NDVIr)
 plot(NDVIstack)
+#cl <- brgr.colors(15)
+#plot(NDVIstack, col=cl)
 
 ext <- c(-20, 60, -80, 40)
 NDVIcrop <- crop(NDVIstack, ext)
@@ -38,7 +44,7 @@ g2 <- ggplot() + geom_raster(data= june2020, mapping = aes(x=x, y=y, fill= Norma
 
 g1/g2
 
-NDVIdif<-june2020-june1999
+NDVIdif<-june2020-june1999 #PROBLEMS
 plot(NDVIdif)
 par(mfrow=c(2,2))
 plot(june1999)
@@ -91,13 +97,11 @@ SWIr <- lapply(SWI, raster)
 SWIr
 
 SWIstack <- stack(SWIr)
-plot(SWIstack)
-
-cl<- colorRampPalette(c("darkblue","blue","lightblue"))(100)
+cl<- colorRampPalette(c("black","darkblue","blue","lightblue","white"))(100)
 plot(SWIstack, col=cl)
 
 SWIcrop <- crop(SWIstack, ext)
-plot(SWIcrop)
+plot(SWIcrop, col=cl)
 SWIcrop
 
 SWIjune2007 <- SWIcrop$Soil.Water.Index.with.T.5.1
@@ -112,13 +116,13 @@ SWIdifcl<-colorRampPalette(c("darkblue","yellow","red","black"))(100) #create th
 SWIdif<-SWIjune2007-SWIjune2020 #make the difference
 plot(SWIdif, col=SWIdifcl) #plotting the images
 
-par(mfrow=c(1,1))
+par(mfrow=c(1,2))
 hist(SWIjune2007)
 hist(SWIjune2020)
 
 
 
-
+### roba bruttta  ####
 
 LC2000 <- raster("U2018_CLC2018_V2020_20u1.tif")
 points <- SpatialPoints(coords, proj4string =CRS("+proj=longlat +datum=WGS84"))
@@ -132,11 +136,12 @@ install.packages("sp")
 
 #### LC ######
 
+#io farei africa centrale
 
 LC2001 <- brick("LAND2001.jpg")
 plotRGB(LC2001, r=1, g=2, b=3, stretch="lin")
 ggRGB(LC2001, r=1, g=2, b=3, stretch="lin")
-ext <- c(320, 460, 125, 220)
+ext <- c(380, 450, 140, 200)
 LC2001crop <- crop(LC2001, ext)
 ggRGB(LC2001crop, r=1, g=2, b=3, stretch="lin")
 
@@ -158,10 +163,10 @@ grid.arrange(p1, p2, nrow=2)
 # unsupervised classification
 lc2001c <- unsuperClass(LC2001crop, nClasses=4)
 plot(lc2001c$map)
-# class 1: savannas
-# class 2: woody forest
-# class 3: forest
-# class 4: sea
+# class 1: forest
+# class 2: woody savanna
+# class 3: savanna
+# class 4: water
 
 # set.seed() would allow you to attain the same results ...
 
@@ -175,39 +180,39 @@ plot(lc2011c$map)
 # frequencies
 freq(lc2001c$map)
 #      value count
-#[1,]     1  1920
-#[2,]     2  4008
-#[3,]     3  1438
-#[4,]     4  5934
+#[1,]     1  855
+#[2,]     2  1642
+#[3,]     3  1035
+#[4,]     4  668
 
-s1 <- 1920 + 4008 + 1438 + 5934
+s1 <- 855 + 1642 + 1035 + 668
 
 prop2001 <- freq(lc2001c$map) / s1
 prop2001
-#prop savannas : 14.43%
-#prop woody forest : 30.13%
-#prop forest : 10.81%
-#prop sea : 44.61 %
+#prop forest : 20.36%
+#prop woody savanna : 39.09%
+#prop savanna : 24.64%
+#prop sea : 15.90 %
 
 freq(lc2011c$map)
 #     value count
-#[1,]     1  1975
-#[2,]     2  3894
-#[3,]     3  1498
-#[4,]     4  5933
-s2 <- 1975 + 3894 + 1498 + 5933
+#[1,]     1  1122
+#[2,]     2   592
+#[3,]     3  1532
+#[4,]     4   754
+s2 <- 1122 + 592 + 1532 + 754
 prop2011 <- freq(lc2011c$map) / s2
 prop2011
-#prop savannas : 14.85%
-#prop woody forest : 29.27%
-#prop forest : 11.26%
-#prop sea : 44.61%
+#prop savannas : 28.05%
+#prop woody forest : 38.30%
+#prop forest : 18.85%
+#prop sea : 14.80%
 
 
 # build a dataframe
-cover <- c("Savannas", "Woody Forest", "Forest", "Sea")
-percent_2001 <- c(14.43, 30.13, 10.81, 44.61)
-percent_2011 <- c(14.85, 29.27, 11.26, 44.61)
+cover <- c("Savannas", "Woody Savanna", "Forest", "Water")
+percent_2001 <- c(24.64, 39.09, 20.36, 15.90)
+percent_2011 <- c(28.05, 38.30, 18.85, 14.80)
 percent_2001
 percent_2011 
 percentages <- data.frame(cover, percent_2001, percent_2011)
@@ -223,8 +228,42 @@ p2 <- ggplot(percentages, aes(x=cover, y=percent_2011, color=cover)) + geom_bar(
 grid.arrange(p1, p2, nrow=1)
 
 
+#### brazil 
+# class 1: savannas
+# class 2: forest
+# class 3: grasslands
+# class 4: sea
+
+# value count
+#[1,]     1  1339
+#[2,]     2  2336
+#[3,]     3   878
+#[4,]     4  3847
+s1 <- 1339 + 2336 + 878 + 3847
+
+#prop savannas : 15.94%
+#prop forest : 27.80%
+#prop grasslands : 10.54%
+#prop sea : 45.79 %
+
+# value count
+#[1,]     1   785
+#[2,]     2  2636
+#[3,]     3   435
+#[4,]     4  2144
 
 
+s2 <- 785 + 2636 + 435 + 2144
 
+#prop savannas : 13.08%
+#prop forest :  35.73%
+#prop grasslands : 7.25%
+#prop sea : 43.93 %
 
-
+cover <- c("Savannas", "Forest", "Grasslands", "Sea")
+percent_2001 <- c(15.94, 27.80, 10.54, 45.79)
+percent_2011 <- c(13.08, 35.73, 7.25, 43.93)
+percent_2001
+percent_2011 
+percentages <- data.frame(cover, percent_2001, percent_2011)
+percentages
