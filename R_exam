@@ -3,7 +3,7 @@ library(raster) # work with raster file (single layer data)
 library(viridis) # plot the color palette
 library(RStoolbox) # useful for remote sensing image processing (make classification)
 library(ggplot2) # create graphics - ggplot function
-library(grid.Extra) # for multiframe ggplot
+library(gridExtra) # for multiframe ggplot
 library(patchwork) # multiframe graphics
 library(rgdal) # to open shape file
 
@@ -105,5 +105,17 @@ plot(SWIjune2007)
 plot(SWIjune2020)
 plot(SWIdif)
 plot(FCdif)
+
+LC2000 <- raster("U2018_CLC2018_V2020_20u1.tif")
+points <- SpatialPoints(coords, proj4string =CRS("+proj=longlat +datum=WGS84"))
+pp <- spTransform(points, "EPSG:3035")
+lats <- c(U2018_CLC2018_V2020_20u1.tif$lat_0=52)
+lons <- c(U2018_CLC2018_V2020_20u1.tif$lon_0=10) 
+
+install.packages("sp")
+
+
+
+
 
 
