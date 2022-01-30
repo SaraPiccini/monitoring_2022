@@ -83,11 +83,6 @@ plot(FCjune1999)
 plot(FCjune2020)
 plot(FCdif)
 
-#stats
-plot(FCjune1999, FCjune2020)
-abline(0,1,col="red")
-pairs(FCOVERcrop)
-
 ##### SWI ######
 SWI <- list.files(pattern="SWI")
 SWI
@@ -97,6 +92,9 @@ SWIr
 
 SWIstack <- stack(SWIr)
 plot(SWIstack)
+
+cl<- colorRampPalette(c("darkblue","blue","lightblue"))(100)
+plot(SWIstack, col=cl)
 
 SWIcrop <- crop(SWIstack, ext)
 plot(SWIcrop)
@@ -110,13 +108,17 @@ g2SWI <- ggplot() + geom_raster(data= SWIjune2020, mapping = aes(x=x, y=y, fill=
 
 g1SWI/g2SWI
 
-SWIdif<-SWIjune2020-SWIjune2007
-plot(SWIdif)
-par(mfrow=c(2,2))
-plot(SWIjune2007)
-plot(SWIjune2020)
-plot(SWIdif)
-plot(FCdif)
+SWIdifcl<-colorRampPalette(c("darkblue","yellow","red","black"))(100) #create the color ramp palette
+SWIdif<-SWIjune2007-SWIjune2020 #make the difference
+plot(SWIdif, col=SWIdifcl) #plotting the images
+
+par(mfrow=c(1,1))
+hist(SWIjune2007)
+hist(SWIjune2020)
+
+
+
+
 
 LC2000 <- raster("U2018_CLC2018_V2020_20u1.tif")
 points <- SpatialPoints(coords, proj4string =CRS("+proj=longlat +datum=WGS84"))
