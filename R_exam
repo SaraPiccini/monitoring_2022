@@ -10,6 +10,8 @@ library(rgdal) # to open shape file
 #set the working directory
 setwd("/Users/sarapiccini/Documents/datandvi")
 
+
+#### NDVI #####
 #import data together 
 NDVI <- list.files(pattern="NDVI")
 NDVI
@@ -45,6 +47,9 @@ plot(NDVIdif)
 
 cl= colorRampPalette(c("white", "brown", "blue", "light green", "dark green"))(100)
 plot(NDVIdif, col =cl)
+
+#### FCOVER #######
+
 FCOVER <- list.files(pattern="FCOVER")
 FCOVER
 
@@ -57,7 +62,7 @@ FCOVERr
 FCOVERstack <- stack(FCOVERr)
 plot(FCOVERstack)
 
-
+ext <- c(-20, 60, -80, 40)
 FCOVERcrop <- crop(FCOVERstack, ext)
 plot(FCOVERcrop)
 FCOVERcrop
@@ -65,18 +70,25 @@ FCOVERcrop
 FCjune1999 <- FCOVERcrop$Fraction.of.green.Vegetation.Cover.1km.1
 FCjune2020 <- FCOVERcrop$Fraction.of.green.Vegetation.Cover.1km.2
 
-g1FC <- ggplot() + geom_raster(data= FCjune1999, mapping = aes(x=x, y=y, fill= Fraction.of.green.Vegetation.Cover.1km.1)) + scale_fill_viridis() + ggtitle("FCjune1999")
-g2FC <- ggplot() + geom_raster(data= FCjune2020, mapping = aes(x=x, y=y, fill= Fraction.of.green.Vegetation.Cover.1km.2)) + scale_fill_viridis() + ggtitle("FCjune2020")
+g1FC <- ggplot() + geom_raster(data= FCjune1999, mapping = aes(x=x, y=y, fill= Fraction.of.green.Vegetation.Cover.1km.1)) + scale_fill_viridis(option="magma") + ggtitle("FCjune1999")
+g2FC <- ggplot() + geom_raster(data= FCjune2020, mapping = aes(x=x, y=y, fill= Fraction.of.green.Vegetation.Cover.1km.2)) + scale_fill_viridis(option="magma") + ggtitle("FCjune2020")
 
 g1FC/g2FC
 
 FCdif<-FCjune2020-FCjune1999
 plot(FCdif)
+
 par(mfrow=c(2,2))
 plot(FCjune1999)
 plot(FCjune2020)
 plot(FCdif)
 
+#stats
+plot(FCjune1999, FCjune2020)
+abline(0,1,col="red")
+pairs(FCOVERcrop)
+
+##### SWI ######
 SWI <- list.files(pattern="SWI")
 SWI
 
@@ -114,6 +126,11 @@ lons <- c(U2018_CLC2018_V2020_20u1.tif$lon_0=10)
 
 install.packages("sp")
 
+
+
+#### LC ######
+
+
 LC2001 <- brick("LAND2001.jpg")
 plotRGB(LC2001, r=1, g=2, b=3, stretch="lin")
 ggRGB(LC2001, r=1, g=2, b=3, stretch="lin")
@@ -132,60 +149,76 @@ plotRGB(LC2001crop, r=1, g=2, b=3, stretch="lin")
 plotRGB(LC2011crop, r=1, g=2, b=3, stretch="lin")
 
 # multiframe with ggplot2 and gridExtra
-p1 <- ggRGB(defor1, r=1, g=2, b=3, stretch="lin")
-p2 <- ggRGB(defor2, r=1, g=2, b=3, stretch="lin")
+p1 <- ggRGB(LC2001crop, r=1, g=2, b=3, stretch="lin")
+p2 <- ggRGB(LC2001crop, r=1, g=2, b=3, stretch="lin")
 grid.arrange(p1, p2, nrow=2)
 
 # unsupervised classification
-d1c <- unsuperClass(defor1, nClasses=2)
-plot(d1c$map)
-# class 1: forest
-# class 2: agriculture
+lc2001c <- unsuperClass(LC2001crop, nClasses=4)
+plot(lc2001c$map)
+# class 1: savannas
+# class 2: woody forest
+# class 3: forest
+# class 4: sea
 
 # set.seed() would allow you to attain the same results ...
 
-d2c <- unsuperClass(defor2, nClasses=2)
-plot(d2c$map)
-# class 1: agriculture
-# class 2: forest
+lc2011c <- unsuperClass(LC2011crop, nClasses=4)
+plot(lc2011c$map)
 
-d2c3 <- unsuperClass(defor2, nClasses=3)
-plot(d2c3$map)
+par(mfrow=c(1,2))
+plot(lc2001c$map)
+plot(lc2011c$map)
 
 # frequencies
-freq(d1c$map)
-#   value  count
-# [1,]     1 306583
-# [2,]     2  34709
+freq(lc2001c$map)
+#      value count
+#[1,]     1  1920
+#[2,]     2  4008
+#[3,]     3  1438
+#[4,]     4  5934
 
-s1 <- 306583 + 34709
+s1 <- 1920 + 4008 + 1438 + 5934
 
-prop1 <- freq(d1c$map) / s1
-# prop forest: 0.8983012
-# prop agriculture: 0.1016988
+prop2001 <- freq(lc2001c$map) / s1
+prop2001
+#prop savannas : 14.43%
+#prop woody forest : 30.13%
+#prop forest : 10.81%
+#prop sea : 44.61 %
 
-s2 <- 342726
-prop2 <- freq(d2c$map) / s2
-# prop forest: 0.5206958
-# prop agriculture: 0.4793042
+freq(lc2011c$map)
+#     value count
+#[1,]     1  1975
+#[2,]     2  3894
+#[3,]     3  1498
+#[4,]     4  5933
+s2 <- 1975 + 3894 + 1498 + 5933
+prop2011 <- freq(lc2011c$map) / s2
+prop2011
+#prop savannas : 14.85%
+#prop woody forest : 29.27%
+#prop forest : 11.26%
+#prop sea : 44.61%
+
 
 # build a dataframe
-cover <- c("Forest","Agriculture")
-percent_1992 <- c(89.83, 10.16)
-percent_2006 <- c(52.06, 47.93)
-
-percentages <- data.frame(cover, percent_1992, percent_2006)
+cover <- c("Savannas", "Woody Forest", "Forest", "Sea")
+percent_2001 <- c(14.43, 30.13, 10.81, 44.61)
+percent_2011 <- c(14.85, 29.27, 11.26, 44.61)
+percent_2001
+percent_2011 
+percentages <- data.frame(cover, percent_2001, percent_2011)
 percentages
 
 # let's plot them!
-ggplot(percentages, aes(x=cover, y=percent_1992, color=cover)) + geom_bar(stat="identity", fill="white")
-ggplot(percentages, aes(x=cover, y=percent_2006, color=cover)) + geom_bar(stat="identity", fill="white")
+ggplot(percentages, aes(x=cover, y=percent_2001, color=cover)) + geom_bar(stat="identity", fill="white")
+ggplot(percentages, aes(x=cover, y=percent_2011, color=cover)) + geom_bar(stat="identity", fill="white")
 
-p1 <- ggplot(percentages, aes(x=cover, y=percent_1992, color=cover)) + geom_bar(stat="identity", fill="white")
-p2 <- ggplot(percentages, aes(x=cover, y=percent_2006, color=cover)) + geom_bar(stat="identity", fill="white")
+p1 <- ggplot(percentages, aes(x=cover, y=percent_2001, color=cover)) + geom_bar(stat="identity", fill="white")
+p2 <- ggplot(percentages, aes(x=cover, y=percent_2011, color=cover)) + geom_bar(stat="identity", fill="white")
 
 grid.arrange(p1, p2, nrow=1)
-
 
 
 
