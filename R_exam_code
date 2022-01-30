@@ -6,7 +6,7 @@
 # install.packages("ggplot2")
 # install.packages("patchwork")
 # install.packages("rgdal")
-# library("grid.Extra")
+# library("gridExtra")
 library(ncdf4) # import the copernicus file (in nc)
 library(raster) # work with raster file (single layer data)
 library(viridis) # plot the color palette
@@ -30,20 +30,20 @@ snowraster <- lapply(SCE, raster)
 #snow20 <- plot(snowraster[[3]])
 #snow21 <- plot(snowraster[[4]])
 
-snowcover <- stack(snowraster)
-plot(snowcover)
+snowstack <- stack(snowraster)
+plot(snowstack)
 cl <- colorRampPalette(c("blue","light blue","pink","red"))(100)
-plot(snowcover, col=cl)
+plot(snowstack, col=cl)
 
-ext2 <- c(50, 150, 50, 80)
-cropped2 <- crop(snowcover, ext2)
-plot(cropped2, col=cl)
-cropped2
+ext <- c(50, 150, 50, 80)
+SNOWc <- crop(snowstack, ext)
+plot(SNOWc, col=cl)
+SNOWc
 
-jan2018 <- cropped2$Snow.Cover.Extent.2018
-jan2019 <- cropped2$Snow.Cover.Extent.2019
-jan2020 <- cropped2$Snow.Cover.Extent.2020
-jan2021 <- cropped2$Snow.Cover.Extent.2021
+jan2018 <- SNOWc$Snow.Cover.Extent.2018
+jan2019 <- SNOWc$Snow.Cover.Extent.2019
+jan2020 <- SNOWc$Snow.Cover.Extent.2020
+jan2021 <- SNOWc$Snow.Cover.Extent.2021
 
 g1 <- ggplot() + geom_raster( data= jan2018, mapping = aes(x=x, y=y, fill= Snow.Cover.Extent.2018)) + scale_fill_viridis(option = "mako") + ggtitle("2018")
 g2 <- ggplot() + geom_raster( data= jan2019, mapping = aes(x=x, y=y, fill= Snow.Cover.Extent.2019)) + scale_fill_viridis(option = "mako") + ggtitle("2019")
@@ -82,6 +82,52 @@ winter2021 <- ggRGB(SNOWC$winter2021, r=1, g=2, b=3, stretch="lin")
 
 
 grid.arrange(winter2001, summer2001, winter2021, summer2021, nrow=2)
+
+SNOWCc2001s <- unsuperClass(SNOWC$summer2001, nClasses=2)
+plot(SNOWCc2001s$map)
+#class1: no snow
+#class2: snow
+# set.seed() would allow you to attain the same results 
+
+
+SNOWCc2001w <- unsuperClass(SNOWC$winter2001, nClasses=2)
+plot(SNOWCc2001w$map)
+
+SNOWCc2021s <- unsuperClass(SNOWC$summer2021, nClasses=2)
+plot(SNOWCc2021s$map)
+
+SNOWCc2021w <- unsuperClass(SNOWC$winter2021, nClasses=2)
+plot(SNOWCc2021w$map)
+
+freq(SNOWCc2001s$map)
+#     value  count
+#[1,]     1 229427
+#[2,]     2  29773
+
+s1 <- 229427 + 29773
+propw2001 <- freq(SNOWCc2001s$map) / s1
+propw2001
+#            value    count
+#[1,] 3.858025e-06 0.885135
+#[2,] 7.716049e-06 0.114865
+
+freq(SNOWCc2021w$map)
+#[1,]     1  52400
+#[2,]     2  206800
+
+s2 <- 52400 + 206800
+propw2021 <- freq(SNOWCc2021s$map) / s2
+propw2021
+#           value     count
+#[1,] 3.858025e-06 0.8835147
+#[2,] 7.716049e-06 0.1164853
+
+#build a dataframe
+cover <- c("no snow", "snow")
+percent_1992 <- c(89.83, 10.16)
+percent_2006 <- c(52.06, 47.93)
+
+
 
 
 
