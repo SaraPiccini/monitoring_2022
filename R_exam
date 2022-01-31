@@ -376,22 +376,22 @@ ggRGB(l1988, r=1, g=2, b=3, stretch="lin")
 
 
 par(mfrow=c(1,2))
-plotRGB(l1984, r=1, g=2, b=3, stretch="lin")
-plotRGB(l2011, r=1, g=2, b=3, stretch="lin")
+plotRGB(l1988, r=1, g=2, b=3, stretch="lin")
+plotRGB(l2010, r=1, g=2, b=3, stretch="lin")
 
 # multiframe with ggplot2 and gridExtra
-p1 <- ggRGB(l1984, r=1, g=2, b=3, stretch="lin")
-p2 <- ggRGB(l2011, r=1, g=2, b=3, stretch="lin")
+p1 <- ggRGB(l1988, r=1, g=2, b=3, stretch="lin")
+p2 <- ggRGB(l2010, r=1, g=2, b=3, stretch="lin")
 grid.arrange(p1, p2, nrow=2)
 
 # unsupervised classification
-l1988c <- unsuperClass(l1988, nClasses=2)
+l1988c <- unsuperClass(l1988, nClasses=3)
 plot(l1988c$map)
 # class 1: agriculture
 # class 2: forest
 
 
-l2010c <- unsuperClass(l2010, nClasses=2)
+l2010c <- unsuperClass(l2010, nClasses=3)
 plot(l2010c$map)
 
 # set.seed() would allow you to attain the same results ...
