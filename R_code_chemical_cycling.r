@@ -4,7 +4,7 @@
 # possible range 
 # use brick functions to take data from folders outside R, but since we have single data (single layers we use raster function)
 # every single image has one layer
-# use raster function: create a laster layer
+# use raster function: create a raster layer
 # set the working directory
 library(raster)
 setwd("/Users/sarapiccini/Desktop/lab/EN") 
