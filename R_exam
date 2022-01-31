@@ -267,3 +267,189 @@ percent_2001
 percent_2011 
 percentages <- data.frame(cover, percent_2001, percent_2011)
 percentages
+
+
+
+#### NDVI ####
+
+NDVI2007 <- brick("NDVJune2007.jpeg")
+plotRGB(LC2001, r=1, g=2, b=3, stretch="lin")
+ggRGB(LC2001, r=1, g=2, b=3, stretch="lin")
+ext <- c(380, 450, 140, 200)
+NDVI2007crop <- crop(NDVI2007, ext)
+ggRGB(NDVI2007crop, r=1, g=2, b=3, stretch="lin")
+
+NDVI2020 <- brick("NDVjun2020.jpeg")
+plotRGB(NDVI2020, r=1, g=2, b=3, stretch="lin")
+ggRGB(NDVI2020, r=1, g=2, b=3, stretch="lin")
+NDVI2020crop <- crop(NDVI2020, ext)
+ggRGB(NDVI2020crop, r=1, g=2, b=3, stretch="lin")
+
+par(mfrow=c(1,2))
+plotRGB(NDVI2007crop, r=1, g=2, b=3, stretch="lin")
+plotRGB(NDVI2020crop, r=1, g=2, b=3, stretch="lin")
+
+# multiframe with ggplot2 and gridExtra
+p1 <- ggRGB(NDVI2007crop, r=1, g=2, b=3, stretch="lin")
+p2 <- ggRGB(NDVI2020crop, r=1, g=2, b=3, stretch="lin")
+grid.arrange(p1, p2, nrow=2)
+
+# unsupervised classification
+NDVI2007c <- unsuperClass(NDVI2007crop, nClasses=4)
+plot(NDVI2007c$map)
+# class 1: forest
+# class 2: woody savanna
+# class 3: savanna
+# class 4: water
+
+# set.seed() would allow you to attain the same results ...
+
+NDVI2020c <- unsuperClass(NDVI2020crop, nClasses=4)
+plot(NDVI2020c$map)
+
+par(mfrow=c(1,2))
+plot(NDVI2007c$map)
+plot(NDVI2020c$map)
+
+# frequencies
+freq(lc2001c$map)
+#      value count
+#[1,]     1  855
+#[2,]     2  1642
+#[3,]     3  1035
+#[4,]     4  668
+
+s1 <- 855 + 1642 + 1035 + 668
+
+prop2001 <- freq(lc2001c$map) / s1
+prop2001
+#prop forest : 20.36%
+#prop woody savanna : 39.09%
+#prop savanna : 24.64%
+#prop sea : 15.90 %
+
+freq(lc2011c$map)
+#     value count
+#[1,]     1  1122
+#[2,]     2   592
+#[3,]     3  1532
+#[4,]     4   754
+s2 <- 1122 + 592 + 1532 + 754
+prop2011 <- freq(lc2011c$map) / s2
+prop2011
+#prop savannas : 28.05%
+#prop woody forest : 38.30%
+#prop forest : 18.85%
+#prop sea : 14.80%
+
+
+# build a dataframe
+cover <- c("Savannas", "Woody Savanna", "Forest", "Water")
+percent_2001 <- c(24.64, 39.09, 20.36, 15.90)
+percent_2011 <- c(28.05, 38.30, 18.85, 14.80)
+percent_2001
+percent_2011 
+percentages <- data.frame(cover, percent_2001, percent_2011)
+percentages
+
+# let's plot them!
+ggplot(percentages, aes(x=cover, y=percent_2001, color=cover)) + geom_bar(stat="identity", fill="white")
+ggplot(percentages, aes(x=cover, y=percent_2011, color=cover)) + geom_bar(stat="identity", fill="white")
+
+p1 <- ggplot(percentages, aes(x=cover, y=percent_2001, color=cover)) + geom_bar(stat="identity", fill="white")
+p2 <- ggplot(percentages, aes(x=cover, y=percent_2011, color=cover)) + geom_bar(stat="identity", fill="white")
+
+grid.arrange(p1, p2, nrow=1)
+
+
+
+#### lansat 4-5 hub - apps.sentinel-hub.com ####
+
+l2010 <- brick("2010-07-31-00_00_2010-07-31-23_59_Landsat_4-5_TM_L1_False_color-2.jpg")
+plotRGB(l2010, r=1, g=2, b=3, stretch="lin")
+ggRGB(l2010, r=1, g=2, b=3, stretch="lin")
+
+
+l1988 <- brick("1988-07-02-00_00_1988-07-02-23_59_Landsat_4-5_TM_L1_False_color-2.jpg")
+plotRGB(l1988, r=1, g=2, b=3, stretch="lin")
+ggRGB(l1988, r=1, g=2, b=3, stretch="lin")
+
+
+par(mfrow=c(1,2))
+plotRGB(l1984, r=1, g=2, b=3, stretch="lin")
+plotRGB(l2011, r=1, g=2, b=3, stretch="lin")
+
+# multiframe with ggplot2 and gridExtra
+p1 <- ggRGB(l1984, r=1, g=2, b=3, stretch="lin")
+p2 <- ggRGB(l2011, r=1, g=2, b=3, stretch="lin")
+grid.arrange(p1, p2, nrow=2)
+
+# unsupervised classification
+l1988c <- unsuperClass(l1988, nClasses=2)
+plot(l1988c$map)
+# class 1: agriculture
+# class 2: forest
+
+
+l2010c <- unsuperClass(l2010, nClasses=2)
+plot(l2010c$map)
+
+# set.seed() would allow you to attain the same results ...
+
+par(mfrow=c(1,2))
+plot(l1988c$map)
+plot(l2010c$map)
+
+# frequencies
+freq(lc2001c$map)
+#      value count
+#[1,]     1  855
+#[2,]     2  1642
+#[3,]     3  1035
+#[4,]     4  668
+
+s1 <- 855 + 1642 + 1035 + 668
+
+prop2001 <- freq(lc2001c$map) / s1
+prop2001
+#prop forest : 20.36%
+#prop woody savanna : 39.09%
+#prop savanna : 24.64%
+#prop sea : 15.90 %
+
+freq(lc2011c$map)
+#     value count
+#[1,]     1  1122
+#[2,]     2   592
+#[3,]     3  1532
+#[4,]     4   754
+s2 <- 1122 + 592 + 1532 + 754
+prop2011 <- freq(lc2011c$map) / s2
+prop2011
+#prop savannas : 28.05%
+#prop woody forest : 38.30%
+#prop forest : 18.85%
+#prop sea : 14.80%
+
+
+# build a dataframe
+cover <- c("Savannas", "Woody Savanna", "Forest", "Water")
+percent_2001 <- c(24.64, 39.09, 20.36, 15.90)
+percent_2011 <- c(28.05, 38.30, 18.85, 14.80)
+percent_2001
+percent_2011 
+percentages <- data.frame(cover, percent_2001, percent_2011)
+percentages
+
+# let's plot them!
+ggplot(percentages, aes(x=cover, y=percent_2001, color=cover)) + geom_bar(stat="identity", fill="white")
+ggplot(percentages, aes(x=cover, y=percent_2011, color=cover)) + geom_bar(stat="identity", fill="white")
+
+p1 <- ggplot(percentages, aes(x=cover, y=percent_2001, color=cover)) + geom_bar(stat="identity", fill="white")
+p2 <- ggplot(percentages, aes(x=cover, y=percent_2011, color=cover)) + geom_bar(stat="identity", fill="white")
+
+grid.arrange(p1, p2, nrow=1)
+
+
+
+
