@@ -1,7 +1,12 @@
 # install and import all the library 
-
-
-library(c("ncdf4", "raster", "viridis", "RStoolbox", "ggplot2", "patchwork", "rgdal", "gridExtra"))
+library(ncdf4) # import the copernicus file (in nc)
+library(raster) # work with raster file (single layer data)
+library(viridis) # plot the color palette
+library(RStoolbox) # useful for remote sensing image processing (make classification - unsuperclass)
+library(ggplot2) # create graphics - ggplot function
+library(gridExtra) # for multiframe ggplot
+library(patchwork) # multiframe graphics
+library(rgdal) # to open shape file
 
 setwd("/Users/sarapiccini/Documents/datalst")
 
@@ -71,5 +76,36 @@ p1 + p2
 
 
 
+#### SSM ####
 
+SSM <- list.files(pattern="SSM")
+SSM
+
+SSMraster <- lapply(SSM, raster)
+SSMraster
+SSMstack <- stack(SSMraster)
+SSMstack
+plot(SSMstack)
+
+SSMcrop <- crop(SSMstack, ext)
+plot(SSMcrop)
+SSMcrop
+
+ext <- c(-10, 0, 35, 40)
+
+### BA ####
+BA <- list.files(pattern="BA")
+BA
+
+BAraster <- lapply(BA, raster)
+BAraster
+BAstack <- stack(BAraster)
+BAstack
+plot(BAstack)
+
+BAcrop <- crop(BAstack, ext)
+plot(BAcrop)
+BAcrop
+
+ext <- c(-10, 0, 35, 40)
 
