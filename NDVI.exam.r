@@ -44,10 +44,24 @@ NDVI2009 <- NDVIcrop$Normalized.Difference.Vegetation.Index.1KM.3
 NDVI2014 <- NDVIcrop$Normalized.Difference.Vegetation.Index.1KM.4
 NDVI2019 <- NDVIcrop$Normalized.Difference.Vegetation.Index.1KM.5
 
+g1 <- ggplot() + geom_raster(data= NDVI1999, mapping = aes(x=x, y=y, fill= Normalized.Difference.Vegetation.Index.1KM.1)) + scale_fill_viridis(option = "magma") + ggtitle("NDVI in 1999")
+g2 <- ggplot() + geom_raster(data= NDVI2004, mapping = aes(x=x, y=y, fill= Normalized.Difference.Vegetation.Index.1KM.2)) + scale_fill_viridis(option = "magma") + ggtitle("NDVI in 2004")
+g3 <- ggplot() + geom_raster(data= NDVI2009, mapping = aes(x=x, y=y, fill= Normalized.Difference.Vegetation.Index.1KM.3)) + scale_fill_viridis(option = "magma") + ggtitle("NDVI in 2009")
+g4 <- ggplot() + geom_raster(data= NDVI2014, mapping = aes(x=x, y=y, fill= Normalized.Difference.Vegetation.Index.1KM.4)) + scale_fill_viridis(option = "magma") + ggtitle("NDVI in 2014")
+g5 <- ggplot() + geom_raster(data= NDVI2019, mapping = aes(x=x, y=y, fill= Normalized.Difference.Vegetation.Index.1KM.5)) + scale_fill_viridis(option = "magma") + ggtitle("NDVI in 2019")
+
+
 NDVI1999c <- unsuperClass(NDVI1999, nClasses=5)
 NDVI1999c
 plot(NDVI1999c$map)
 
+grid.arrange(g1, g2, g3, g4, g5, nrow=2)
+
+list_rast2 <- lapply(rlist, brick) # to make the list a brick list - apply brick function to all the files (multi-layers)
+list_rast2
+NDVIcrop2 <- crop(list_rast2, ext)
+plot(NDVIcrop2)
+NDVIcrop2
 
 
 
@@ -77,7 +91,7 @@ FCOVER2009 <- FCOVERcrop$Fraction.of.green.Vegetation.Cover.1km.3
 FCOVER2014 <- FCOVERcrop$Fraction.of.green.Vegetation.Cover.1km.4
 FCOVER2019 <- FCOVERcrop$Fraction.of.green.Vegetation.Cover.1km.5
 
-# Create a color palette
+# Create a color palette with COLORBREWER 2.0
 class5_YlGn <- colorRampPalette(colors = c('#ffffcc','#c2e699','#78c679','#31a354','#006837'))(255)
 plot(FCOVERcrop, col=class5_YlGn)
 
@@ -145,7 +159,16 @@ dif5 <- FCOVER1999 - FCOVER2019
 
 # Use ggplot with viridis palette to see differences between years
 d1 <- ggplot() + geom_raster(data = FCOVER1999 - FCOVER2019, mapping = aes(x=x, y=y, fill= dif5)) + scale_fill_viridis() + ggtitle("Percentage of forest loss and gain between 1999 and 2019")
- 
+
+# Create a color palette with COLORBREWER 2.0 to better see differences
+# x = 0 -> no changes: colored in white
+class3_RdBu <- colorRampPalette(colors = c('#ef8a62','#f7f7f7','#67a9cf'))(255)
+plot(dif5, col=class3_RdBu)
+# x = 0 -> no changes: colored in black
+class3_RdBu2 <- colorRampPalette(colors = c('#ef8a62','#636363','#7fbf7b'))(255)
+plot(dif5, col=class3_RdBu2)
+
+
 
 
 
