@@ -32,12 +32,6 @@ plot(NDVIcrop)
 NDVIcrop
 
 # Let's assign them to an object
-NDVI1999 <- list_rast[[1]]
-NDVI2004 <- list_rast[[2]]
-NDVI2009 <- list_rast[[3]]
-NDVI2014 <- list_rast[[4]]
-NDVI2019 <- list_rast[[5]]
-
 NDVI1999 <- NDVIcrop$Normalized.Difference.Vegetation.Index.1KM.1
 NDVI2004 <- NDVIcrop$Normalized.Difference.Vegetation.Index.1KM.2
 NDVI2009 <- NDVIcrop$Normalized.Difference.Vegetation.Index.1KM.3
@@ -50,18 +44,60 @@ g3 <- ggplot() + geom_raster(data= NDVI2009, mapping = aes(x=x, y=y, fill= Norma
 g4 <- ggplot() + geom_raster(data= NDVI2014, mapping = aes(x=x, y=y, fill= Normalized.Difference.Vegetation.Index.1KM.4)) + scale_fill_viridis(option = "magma") + ggtitle("NDVI in 2014")
 g5 <- ggplot() + geom_raster(data= NDVI2019, mapping = aes(x=x, y=y, fill= Normalized.Difference.Vegetation.Index.1KM.5)) + scale_fill_viridis(option = "magma") + ggtitle("NDVI in 2019")
 
+#
 
-NDVI1999c <- unsuperClass(NDVI1999, nClasses=5)
+#list_rast2 <- lapply(rlist, brick) # to make the list a brick list - apply brick function to all the files (multi-layers)
+#list_rast2
+
+
+list_rast <- lapply(rlist, raster) # to make the list a brick list - apply brick function to all the files (multi-layers)
+list_rast
+NDVIstack <- stack(list_rast) # creating a stack
+NDVIstack
+ext <- c(-27, 47, -20, 16)
+NDVIcrop <- crop(NDVIstack, ext)
+plot(NDVIcrop)
+NDVIcrop
+
+NDVI1999 <- NDVIcrop$Normalized.Difference.Vegetation.Index.1KM.1
+NDVI2004 <- NDVIcrop$Normalized.Difference.Vegetation.Index.1KM.2
+NDVI2009 <- NDVIcrop$Normalized.Difference.Vegetation.Index.1KM.3
+NDVI2014 <- NDVIcrop$Normalized.Difference.Vegetation.Index.1KM.4
+NDVI2019 <- NDVIcrop$Normalized.Difference.Vegetation.Index.1KM.5
+
+NDVI1999 <- raster("c_gls_NDVI_199906010000_GLOBE_VGT_V2.2.1.nc")
+plotRGB(NDVI1999, r=1, g=2, b=3, stretch="lin")
+ggRGB(NDVI1999, r=1, g=2, b=3, stretch="lin")
+ext <- c(380, 450, 140, 200)
+LC2001crop <- crop(LC2001, ext)
+ggRGB(LC2001crop, r=1, g=2, b=3, stretch="lin")
+
+
+NDVI1999c <- unsuperClass(NDVI1999, nClasses=7)
 NDVI1999c
 plot(NDVI1999c$map)
+NDVI2004c <- unsuperClass(NDVI2004, nClasses=4)
+NDVI2004c
+plot(NDVI2004c$map)
+NDVI2009c <- unsuperClass(NDVI2009, nClasses=4)
+NDVI2009c
+plot(NDVI2014c$map)
+NDVI2014c <- unsuperClass(NDVI2014, nClasses=4)
+NDVI2014c
+plot(NDVI2014c$map)
+NDVI2019c <- unsuperClass(NDVI2019, nClasses=7)
+NDVI2019c
+plot(NDVI2019c$map)
+
+par(mfrow=c(1,2))
+plot(NDVI1999c$map)
+plot(NDVI2019c$map)
+
+
 
 grid.arrange(g1, g2, g3, g4, g5, nrow=2)
 
-list_rast2 <- lapply(rlist, brick) # to make the list a brick list - apply brick function to all the files (multi-layers)
-list_rast2
-NDVIcrop2 <- crop(list_rast2, ext)
-plot(NDVIcrop2)
-NDVIcrop2
+
 
 
 
@@ -158,15 +194,18 @@ dif4 <- FCOVER2014 - FCOVER2019
 dif5 <- FCOVER1999 - FCOVER2019
 
 # Use ggplot with viridis palette to see differences between years
-d1 <- ggplot() + geom_raster(data = FCOVER1999 - FCOVER2019, mapping = aes(x=x, y=y, fill= dif5)) + scale_fill_viridis() + ggtitle("Percentage of forest loss and gain between 1999 and 2019")
+d1 <- ggplot() + geom_raster(data = FCOVER1999 - FCOVER2019, mapping = aes(x=x, y=y, fill= dif5)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest loss and gain between 1999 and 2019")
 
 # Create a color palette with COLORBREWER 2.0 to better see differences
 # x = 0 -> no changes: colored in white
 class3_RdBu <- colorRampPalette(colors = c('#ef8a62','#f7f7f7','#67a9cf'))(255)
-plot(dif5, col=class3_RdBu)
+difw <- plot(dif5, col=class3_RdBu)
 # x = 0 -> no changes: colored in black
 class3_RdBu2 <- colorRampPalette(colors = c('#ef8a62','#636363','#7fbf7b'))(255)
-plot(dif5, col=class3_RdBu2)
+difb <- plot(dif5, col=class3_RdBu2)
+
+
+
 
 
 
