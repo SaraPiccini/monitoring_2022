@@ -302,17 +302,31 @@ FCOVERstack <- stack(rfcover_rast)
 FCOVERstack 
 plot(FCOVERstack)
 
+ext <- c(-80, -20, -60, 20)
 # Crop the image over Central Africa
 FCOVERcrop <- crop(FCOVERstack, ext)
 plot(FCOVERcrop)
 FCOVERcrop
+class5_YlGn <- colorRampPalette(colors = c('#ffffcc','#c2e699','#78c679','#31a354','#006837'))(255)
+plot(FCOVERcrop, col=class5_YlGn)
+
+FCOVER1999 <- FCOVERcrop$Fraction.of.green.Vegetation.Cover.1km.1
+FCOVER2019 <- FCOVERcrop$Fraction.of.green.Vegetation.Cover.1km.2
+
+plot(FCOVER1999, FCOVER2019, xlim=c(0, 1), ylim=c(0, 1), xlab="FCOVER 1999", ylab="FCOVER 2019")
+abline(0,1, col="red")
 
 
+par(mfrow=c(1,2))
+hist(FCOVER1999)
+hist(FCOVER2019)
 
 
+pairs
 
+dif1 <- FCOVER1999 - FCOVER2019
 
-
-
+class3_RdBu <- colorRampPalette(colors = c('#ef8a62','#f7f7f7','#67a9cf'))(255)
+difw <- plot(dif1, col=class3_RdBu, main = "Difference in Forest Cover between 1999 and 2019")
 
 
