@@ -206,4 +206,26 @@ hist(veg2006)
 hist(veg2020)
 
 
+#####LST DC
+rlist <- list.files(pattern="LST") # listing all the files with the pattern present in the directory
+rlist
+
+# to make the list a brick list - apply brick function to all the files (multi-layers)
+list_rast <- lapply(rlist, raster) 
+list_rast
+# creating a stack
+LSTstack <- stack(list_rast) 
+LSTstack
+plot(LSTstack)
+
+ext <- c(94.5, 150, -11.5, 0)
+#ext <- c(-80, -20, -60, 20)
+LSTcrop <- crop(LSTstack, ext)
+plot(LSTcrop)
+LSTcrop
+
+
+
+
+
 
