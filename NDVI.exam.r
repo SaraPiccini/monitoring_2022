@@ -10,6 +10,7 @@ library(ggplot2) # for plots - to ggplot raster layers - create graphics
 library(viridis) # palette -  color scales
 library(patchwork) # for comparing separate ggplots - compose multiple ggplots
 library(gridExtra) #for grid.arrange plotting, creating a multiframe with ggplot
+library(rgdal)
 
 # Set the working directory
 setwd("/Users/sarapiccini/Documents/datandvi")
@@ -241,10 +242,76 @@ dev.off()
 
 ######
 
+install.packages("BiocManager") #to deal with HDF5 file
+BiocManager::install("rhdf5")
+library("rhdf5")
+library("rgdal")
 
 setwd("/Users/sarapiccini/Documents/datandvii")
 rlist <- list.files(pattern="NDVI") # listing all the files with the pattern present in the directory
 rlist
+
+h5ls("g2_BIOPAR_NDVI_199812240000_AFRI_VGT_V1.3.h5") # View structure of the file
+# group       name       otype  dclass          dim
+#0     /        LMK H5I_DATASET INTEGER 10081 x 8961
+#1     /       NDVI H5I_DATASET INTEGER 10081 x 8961
+#2     / NDVI-QFLAG H5I_DATASET INTEGER 10081 x 8961
+#3     /       NMOD H5I_DATASET INTEGER 10081 x 8961
+
+# look at the attributes of the precip_data dataset:
+h5readAttributes(file = "g2_BIOPAR_NDVI_199812240000_AFRI_VGT_V1.3.h5", name = "NDVI") 
+#$CLASS
+#[1] "DATA"
+#$MISSING_VALUE
+#[1] "255"
+#$NB_BYTES
+#[1] "Uint8"
+#$OFFSET
+#[1] "25"
+#$ORDER_BYTES
+#[1] "1"
+#$PRODUCT
+#[1] "NDVI"
+#$SCALING_FACTOR
+#[1] "250"
+h5dump("g2_BIOPAR_NDVI_199812240000_AFRI_VGT_V1.3.h5")
+
+NDVI <- brick("g2_BIOPAR_NDV_QL_201312240000_AFRI_VGT_V1.3.tiff") 
+ras_brick <- brick(lapply(paste("g2_BIOPAR_NDV_QL_201312240000_AFRI_VGT_V1.3.tiff", sep=""), raster)) 
+dim(ras_brick) 
+
+
+############
+
+#~~~~ ".H5" files 
+#list all SMAP-L4 .H5 files
+NDVI <- "g2_BIOPAR_NDVI_199812240000_AFRI_VGT_V1.3.h5"
+# Open the first file as an example
+nc <- nc_open(NDVI[1]) 
+print(nc) # Notice the variables and the structure of the file
+
+# Extract fields/ variables
+NDVI1 <- ncvar_get(nc,"NDVI")
+nc_close(nc)
+
+print(NDVI1)
+
+# Conver data to raster using mat2ras.R function
+
+library(raster)
+NDVI <-'g2_BIOPAR_NDV_QL_199812240000_AFRI_VGT_V1.3.tiff' 
+imported_raster <- raster(NDVI)
+
+
+
+
+test_file <- tempfile(fileext="g2_BIOPAR_NDVI_199812240000_AFRI_VGT_V1.3.h5")
+file.h5 <- H5File$new(test_file, mode="w")
+
+NDVI <- "g2_BIOPAR_NDVI_199812240000_AFRI_VGT_V1.3.h5"$NDVI
+
+
+gdalinfo 
 list_rast <- lapply(rlist, raster) # to make the list a brick list - apply brick function to all the files (multi-layers)
 list_rast
 NDVIstack <- stack(list_rast) # creating a stack
