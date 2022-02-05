@@ -308,8 +308,6 @@ imported_raster <- raster(NDVI)
 test_file <- tempfile(fileext="g2_BIOPAR_NDVI_199812240000_AFRI_VGT_V1.3.h5")
 file.h5 <- H5File$new(test_file, mode="w")
 
-NDVI <- "g2_BIOPAR_NDVI_199812240000_AFRI_VGT_V1.3.h5"$NDVI
-
 
 gdalinfo 
 list_rast <- lapply(rlist, raster) # to make the list a brick list - apply brick function to all the files (multi-layers)
@@ -354,6 +352,21 @@ NDVIdif <- NDVI1999 - NDVI2019
 #creation of a new color palette to emphasize differences with COLORBREWER 2.0:
 col <- colorRampPalette(c('#ef3b2c','#f7f7f7','#008837'))(255)
 plot(NDVIdif, col=col, main="Difference in NDVI between 1999 and 2019")
+
+##### tif ####
+
+rlist <- list.files(pattern="NDVI") # listing all the files with the pattern present in the directory
+rlist
+list_rast <- lapply(rlist, raster) # 
+list_rast
+
+
+plot(list_rast)
+
+
+
+
+
 
 ######
 
