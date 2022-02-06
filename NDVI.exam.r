@@ -29,31 +29,22 @@ list_rast
 FCOVERstack <- stack(list_rast) 
 FCOVERstack
 
-FCOVER1999 <- FCOVERstack$Fraction.of.green.Vegetation.Cover.1km.1
-FCOVER2004 <- FCOVERstack$Fraction.of.green.Vegetation.Cover.1km.2
-FCOVER2009 <- FCOVERstack$Fraction.of.green.Vegetation.Cover.1km.3 
-FCOVER2014 <- FCOVERstack$Fraction.of.green.Vegetation.Cover.1km.4
-FCOVER2019 <- FCOVERstack$Fraction.of.green.Vegetation.Cover.1km.5 
-plot(FCOVERstack)
-
 # Change variables'names 
 names(FCOVERstack) <- c("FCOVER1999","FCOVER2004","FCOVER2009","FCOVER2014","FCOVER2020")
+plot(FCOVERstack)
+
+# and then we separate the files, assigning to each element of the stack a name
+lai1999 <- laistack$LAI.1km.1
+lai2006 <- laistack$LAI.1km.2
+lai2013 <- laistack$LAI.1km.3
+lai2020 <- laistack$LAI.1km.4
 
 # Crop the image over Central Africa
-ext <- c(94.5, 150, -11.5, 0) #indonesia
+#ext <- c(94.5, 150, -11.5, 0) indonesia
 ext <- c(-10, 25, -10, 10)
 FCOVERcrop <- crop(FCOVERstack, ext)
 plot(FCOVERcrop)
 FCOVERcrop
-
-
-
-#S eparating the files, assigning to each element of the stack a name
-#FCOVERc1999 <- FCOVERcrop$FCOVER1999
-#FCOVERc2004 <- FCOVERcrop$FCOVER2004
-#FCOVERc2009 <- FCOVERcrop$FCOVER2009
-#FCOVERc2014 <- FCOVERcrop$FCOVER2014
-#FCOVERc2020 <- FCOVERcrop$FCOVER2020
 
 # Create a color palette with COLORBREWER 2.0
 class5_YlGn <- colorRampPalette(colors = c('#ffffcc','#c2e699','#78c679','#31a354','#006837'))(100) #da rifare
@@ -61,24 +52,24 @@ plot(FCOVERcrop, col=class5_YlGn)
 
 # Plot FCOVER of each year
 par(mfrow=c(2,3))
-plot(FCOVER1999, main="Forest Cover in 1999", col=class5_YlGn)
-plot(FCOVER2004, main="Forest Cover in 2004", col=class5_YlGn)
-plot(FCOVER2009, main="Forest Cover in 2009", col=class5_YlGn)
-plot(FCOVER2014, main="Forest Cover in 2014", col=class5_YlGn)
-plot(FCOVER2020, main="Forest Cover in 2020", col=class5_YlGn)
+plot(FCOVERcrop$FCOVER1999, main="Forest Cover in 1999", col=class5_YlGn)
+plot(FCOVERcrop$FCOVER2004, main="Forest Cover in 2004", col=class5_YlGn)
+plot(FCOVERcrop$FCOVER2009, main="Forest Cover in 2009", col=class5_YlGn)
+plot(FCOVERcrop$FCOVER2014, main="Forest Cover in 2014", col=class5_YlGn)
+plot(FCOVERcrop$FCOVER2020, main="Forest Cover in 2020", col=class5_YlGn)
 
 # Export file
 pdf("fcover.pdf", width=30, height=10) #migliorare
 par(mfrow=c(2,3))
-plot(FCOVER1999, main="Forest Cover in 1999", col=class5_YlGn)
-plot(FCOVER2004, main="Forest Cover in 2004", col=class5_YlGn)
-plot(FCOVER2009, main="Forest Cover in 2009", col=class5_YlGn)
-plot(FCOVER2014, main="Forest Cover in 2014", col=class5_YlGn)
-plot(FCOVER2020, main="Forest Cover in 2020", col=class5_YlGn)
+plot(FCOVERcrop$FCOVER1999, main="Forest Cover in 1999", col=class5_YlGn)
+plot(FCOVERcrop$FCOVER2004, main="Forest Cover in 2004", col=class5_YlGn)
+plot(FCOVERcrop$FCOVER2009, main="Forest Cover in 2009", col=class5_YlGn)
+plot(FCOVERcrop$FCOVER2014, main="Forest Cover in 2014", col=class5_YlGn)
+plot(FCOVERcrop$FCOVER2020, main="Forest Cover in 2020", col=class5_YlGn)
 dev.off()
 
 # Or plot them with ggplot
-g1 <- ggplot() + geom_raster(FCOVERc1999, mapping = aes(x=x, y=y, fill= FCOVER1999)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in 1999") 
+g1 <- ggplot() + geom_raster(FCOVERcrop, mapping = aes(x=x, y=y, fill= FCOVER1999)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in 1999") 
 g2 <- ggplot() + geom_raster(FCOVER2004, mapping = aes(x=x, y=y, fill= Fraction.of.green.Vegetation.Cover.1km.2)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in 2004") + labs(fill = "FCOVER")
 g3 <- ggplot() + geom_raster(FCOVER2009, mapping = aes(x=x, y=y, fill= Fraction.of.green.Vegetation.Cover.1km.3)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in 2009") + labs(fill = "FCOVER")
 g4 <- ggplot() + geom_raster(FCOVER2014, mapping = aes(x=x, y=y, fill= Fraction.of.green.Vegetation.Cover.1km.4)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in 2014") + labs(fill = "FCOVER")
