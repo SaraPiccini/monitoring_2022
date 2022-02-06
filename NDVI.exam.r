@@ -28,25 +28,32 @@ list_rast
 # creating a stack
 FCOVERstack <- stack(list_rast) 
 FCOVERstack
+
+FCOVER1999 <- FCOVERstack$Fraction.of.green.Vegetation.Cover.1km.1
+FCOVER2004 <- FCOVERstack$Fraction.of.green.Vegetation.Cover.1km.2
+FCOVER2009 <- FCOVERstack$Fraction.of.green.Vegetation.Cover.1km.3 
+FCOVER2014 <- FCOVERstack$Fraction.of.green.Vegetation.Cover.1km.4
+FCOVER2019 <- FCOVERstack$Fraction.of.green.Vegetation.Cover.1km.5 
 plot(FCOVERstack)
 
-# Change variables' names 
+# Change variables'names 
 names(FCOVERstack) <- c("FCOVER1999","FCOVER2004","FCOVER2009","FCOVER2014","FCOVER2020")
 
-
 # Crop the image over Central Africa
-ext <- c(94.5, 150, -11.5, 0)
-#ext <- c(-80, -20, -60, 20)
+ext <- c(94.5, 150, -11.5, 0) #indonesia
+ext <- c(-10, 25, -10, 10)
 FCOVERcrop <- crop(FCOVERstack, ext)
 plot(FCOVERcrop)
 FCOVERcrop
 
-# Separating the files, assigning to each element of the stack a name
-FCOVERc1999 <- FCOVERcrop$FCOVER1999
-FCOVERc2004 <- FCOVERcrop$FCOVER2004
-FCOVERc2009 <- FCOVERcrop$FCOVER2009
-FCOVERc2014 <- FCOVERcrop$FCOVER2014
-FCOVERc2020 <- FCOVERcrop$FCOVER2020
+
+
+#S eparating the files, assigning to each element of the stack a name
+#FCOVERc1999 <- FCOVERcrop$FCOVER1999
+#FCOVERc2004 <- FCOVERcrop$FCOVER2004
+#FCOVERc2009 <- FCOVERcrop$FCOVER2009
+#FCOVERc2014 <- FCOVERcrop$FCOVER2014
+#FCOVERc2020 <- FCOVERcrop$FCOVER2020
 
 # Create a color palette with COLORBREWER 2.0
 class5_YlGn <- colorRampPalette(colors = c('#ffffcc','#c2e699','#78c679','#31a354','#006837'))(100) #da rifare
@@ -150,24 +157,22 @@ dev.off()
 ######
 
 
-rfcover <- list.files(pattern="FCOVER")
-rfcover
+rLST<- list.files(pattern="LST")
+rLST
 
-rfcover_rast <- lapply(rfcover, raster)
-rfcover_rast 
+rLST_rast <- lapply(rLST, raster)
+rLST_rast 
 
 # Creating a stack
-FCOVERstack <- stack(rfcover_rast) 
-FCOVERstack 
-plot(FCOVERstack)
+LSTstack <- stack(rLST_rast) 
+LSTstack 
+plot(LSTstack)
 
-ext <- c(-80, -20, -60, 20)
 # Crop the image over Central Africa
-FCOVERcrop <- crop(FCOVERstack, ext)
-plot(FCOVERcrop)
-FCOVERcrop
-class5_YlGn <- colorRampPalette(colors = c('#ffffcc','#c2e699','#78c679','#31a354','#006837'))(255)
-plot(FCOVERcrop, col=class5_YlGn)
+LSTcrop <- crop(LSTstack, ext)
+plot(LSTcrop)
+LSTcrop
+
 
 FCOVER1999 <- FCOVERcrop$Fraction.of.green.Vegetation.Cover.1km.1
 FCOVER2019 <- FCOVERcrop$Fraction.of.green.Vegetation.Cover.1km.2
@@ -207,22 +212,25 @@ hist(veg2020)
 
 
 #####LST DC
-rlist <- list.files(pattern="LST") # listing all the files with the pattern present in the directory
-rlist
+LAIrlist <- list.files(pattern="LAI") # listing all the files with the pattern present in the directory
+LAIrlist
 
 # to make the list a brick list - apply brick function to all the files (multi-layers)
-list_rast <- lapply(rlist, raster) 
-list_rast
+LAIlist_rast <- lapply(LAIrlist, raster) 
+LAIlist_rast
 # creating a stack
-LSTstack <- stack(list_rast) 
-LSTstack
-plot(LSTstack)
+LAIstack <- stack(LAIlist_rast) 
+LAIstack
+plot(LAIstack)
 
-ext <- c(94.5, 150, -11.5, 0)
-#ext <- c(-80, -20, -60, 20)
-LSTcrop <- crop(LSTstack, ext)
-plot(LSTcrop)
-LSTcrop
+LAIcrop <- crop(LAIstack, ext)
+plot(LAIcrop)
+LAIcrop
+
+ggplot() plasma
+hist
+abline
+pairs
 
 
 
