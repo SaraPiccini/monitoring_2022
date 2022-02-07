@@ -34,11 +34,11 @@ names(FCOVERstack) <- c("FCOVER1999","FCOVER2004","FCOVER2009","FCOVER2014","FCO
 plot(FCOVERstack)
 
 # and then we separate the files, assigning to each element of the stack a name
-lai1999 <- laistack$LAI.1km.1
-lai2006 <- laistack$LAI.1km.2
-lai2013 <- laistack$LAI.1km.3
-lai2020 <- laistack$LAI.1km.4
-
+FCOVER1999 <- FCOVERstack$FCOVER1999
+FCOVER2004 <- FCOVERstack$FCOVER2004
+FCOVER2009 <- FCOVERstack$FCOVER2009
+FCOVER2014 <- FCOVERstack$FCOVER2014
+FCOVER2020 <- FCOVERstack$FCOVER2020
 # Crop the image over Central Africa
 #ext <- c(94.5, 150, -11.5, 0) indonesia
 ext <- c(-10, 25, -10, 10)
@@ -69,7 +69,7 @@ plot(FCOVERcrop$FCOVER2020, main="Forest Cover in 2020", col=class5_YlGn)
 dev.off()
 
 # Or plot them with ggplot
-g1 <- ggplot() + geom_raster(FCOVERcrop, mapping = aes(x=x, y=y, fill= FCOVER1999)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in 1999") 
+g1 <- ggplot() + geom_raster(FCOVERstack$FCOVER1999, mapping = aes(x=x, y=y, fill=FCOVER1999)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in 1999") 
 g2 <- ggplot() + geom_raster(FCOVER2004, mapping = aes(x=x, y=y, fill= Fraction.of.green.Vegetation.Cover.1km.2)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in 2004") + labs(fill = "FCOVER")
 g3 <- ggplot() + geom_raster(FCOVER2009, mapping = aes(x=x, y=y, fill= Fraction.of.green.Vegetation.Cover.1km.3)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in 2009") + labs(fill = "FCOVER")
 g4 <- ggplot() + geom_raster(FCOVER2014, mapping = aes(x=x, y=y, fill= Fraction.of.green.Vegetation.Cover.1km.4)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in 2014") + labs(fill = "FCOVER")
@@ -165,24 +165,16 @@ plot(LSTcrop)
 LSTcrop
 
 
-FCOVER1999 <- FCOVERcrop$Fraction.of.green.Vegetation.Cover.1km.1
-FCOVER2019 <- FCOVERcrop$Fraction.of.green.Vegetation.Cover.1km.2
+LST2017 <- LSTcrop$Fraction.of.Valid.Observations.1
+LST2018 <- LSTcrop$Fraction.of.Valid.Observations.2
+LST2020 <- LSTcrop$Fraction.of.Valid.Observations.3
+LST2021 <- LSTcrop$Fraction.of.Valid.Observations.4
 
-plot(FCOVER1999, FCOVER2019, xlim=c(0, 1), ylim=c(0, 1), xlab="FCOVER 1999", ylab="FCOVER 2019")
-abline(0,1, col="red")
-
-
-par(mfrow=c(1,2))
-hist(FCOVER1999)
-hist(FCOVER2019)
-
-
-pairs
-
-dif1 <- FCOVER1999 - FCOVER2019
+dif1 <- LST2017 - LST2021
 
 class3_RdBu <- colorRampPalette(colors = c('#ef8a62','#f7f7f7','#67a9cf'))(255)
-difw <- plot(dif1, col=class3_RdBu, main = "Difference in Forest Cover between 1999 and 2019")
+difw <- plot(dif1, col=class3_RdBu, main = "Difference in LSR between 2017 and 2021")
+
 
 ##
 veg2006 <- v_cropped$FCOVER2006
@@ -202,7 +194,7 @@ hist(veg2006)
 hist(veg2020)
 
 
-#####LST DC
+##### LAI
 LAIrlist <- list.files(pattern="LAI") # listing all the files with the pattern present in the directory
 LAIrlist
 
@@ -221,7 +213,8 @@ LAIcrop
 ggplot() plasma
 hist
 abline
-pairs
+pairs(LAIcrop)
+
 
 
 
