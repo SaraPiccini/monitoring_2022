@@ -8,7 +8,8 @@ library(raster) # work with raster file (single layer data)
 library(ggplot2) # for plots - to ggplot raster layers - create graphics
 library(viridis) # palette - color scales
 library(patchwork) # for comparing separate ggplots - compose multiple ggplots
-library(gridExtra) #for grid.arrange plotting, creating a multiframe with ggplot
+library(gridExtra) # for grid.arrange plotting, creating a multiframe with ggplot
+library(rgdal) # to open shape file (rgdal packages inside this one)
 
 
 # Set the working directory
@@ -215,9 +216,44 @@ hist
 abline
 pairs(LAIcrop)
 
+#####
+
+#import the file
+# st_read() requires the file path to the shapefile.
+palmoil <- st_read("/Users/sarapiccini/Documents/datandvi/Sarawak_oil_palm_concessions.shp")
+shapename <- read_sf('/Users/sarapiccini/Documents/datandvi/Sarawak_oil_palm_concessions.shp')
+shape <- readOGR(dsn = ".", layer = "Sarawak_oil_palm_concessions.shp")
+shp <- shapefile("Sarawak_oil_palm_concessions.shp")
 
 
 
 
+#####
+
+rGFC <- list.files(pattern="GFC")
+rGFC
+
+rGFC_rast <- lapply(rGFC, brick)
+rGFC_rast 
+
+loss1 <- rGFC_rast[[1]]
+tcover1 <- rGFC_rast[[2]]
+loss2 <- rGFC_rast[[3]]
+tcover2 <- rGFC_rast[[4]]
+
+plot(loss1)
 
 
+forestbiome <- readOGR("/Users/sarapiccini/Documents/datandvi/forest_biome/forest_biome.shp")
+plot(forestbiome)
+oilpalm <- readOGR("/Users/sarapiccini/Documents/datandvi/Sarawak_oil_palm_concessions/Sarawak_oil_palm_concessions.shp")
+plot(forestbiome)
+noforest <- readOGR("/Users/sarapiccini/Documents/datandvi/no_forest/no_forest.shp")
+plot(forestbiome)
+public <- readOGR("/Users/sarapiccini/Documents/datandvi/deter-amz-public-2022fev11/deter-amz-public-2022fev11.shp")
+plot(forestbiome)
+def2007 <- readOGR("/Users/sarapiccini/Documents/datandvi/accumulated_deforestation_2007_biome/accumulated_deforestation_2007_biome.shp")
+plot(forestbiome)
+biome<- readOGR("forest_biome.shp")
+oilpalm <- readOGR("Sarawak_oil_palm_concessions.shp")
+public <- readOGR("deter-amz-public-2022fev11.shp")
