@@ -16,11 +16,11 @@ library(rgdal) # to open shape file (rgdal packages inside this one)
 setwd("/Users/sarapiccini/Documents/datandvi")
 
 # Importing is one by one 
-FCOVER1999 <- raster("c_gls_FCOVER_199902280000_GLOBE_VGT_V2.0.2.nc")
+FCOVER1999 <- raster("c_FCOVER_199902280000_GLOBE_VGT_V2.0.2.nc")
 FCOVER1999
 
 # we can also import multiple files at once that have the same pattern in the name (much faster when we have many files to import)
-rlist <- list.files(pattern="FCOVER") # listing all the files with the pattern present in the directory
+rlist <- list.files(pattern="c_FCOVER") # listing all the files with the pattern present in the directory
 rlist
 
 # to make the list a brick list - apply brick function to all the files (multi-layers)
@@ -218,6 +218,12 @@ plotRGB(palmoil, r=1, g=2, b=3, stretch = "lin")
 hist(palmoil)
 
 # FCOVER April 2019 in Sarawak - Malaysia
+
+malaysia2019 <- raster("c_gls_FCOVER300_201910100000_GLOBE_PROBAV_V1.0.1.nc")
+ext2 <- c(108, 120, -5, 7)
+malaysia2019c <- crop(malaysia2019, ext2)
+g6 <- ggplot() + geom_raster(malaysia2019c, mapping = aes(x=x, y=y, fill=Fraction.of.green.Vegetation.Cover.333m)) 
++ scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in Malaysia in 2019") + labs(fill = "FCOVER")
 
 
 
