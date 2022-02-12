@@ -31,21 +31,41 @@ FCOVERstack <- stack(list_rast)
 FCOVERstack
 
 # Change variables'names 
-names(FCOVERstack) <- c("FCOVER1999","FCOVER2004","FCOVER2009","FCOVER2014","FCOVER2020")
+names(FCOVERstack) <- c("FCOVER.1km.1","FCOVER.1km.2","FCOVER.1km.3","FCOVER.1km.4","FCOVER.1km.5")
 plot(FCOVERstack)
 
-# and then we separate the files, assigning to each element of the stack a name
-FCOVER1999 <- FCOVERstack$FCOVER1999
-FCOVER2004 <- FCOVERstack$FCOVER2004
-FCOVER2009 <- FCOVERstack$FCOVER2009
-FCOVER2014 <- FCOVERstack$FCOVER2014
-FCOVER2020 <- FCOVERstack$FCOVER2020
-# Crop the image over Central Africa
-#ext <- c(94.5, 150, -11.5, 0) indonesia
-ext <- c(-10, 25, -10, 10)
+# Crop the image over
+ext <-c(99.6419, 119.2758, 0.8527, 7.3529)
 FCOVERcrop <- crop(FCOVERstack, ext)
 plot(FCOVERcrop)
 FCOVERcrop
+
+# and then we separate the files, assigning to each element of the crop a name
+FCOVER1999 <- FCOVERcrop$FCOVER.1km.1
+FCOVER2004 <- FCOVERcrop$FCOVER.1km.2
+FCOVER2009 <- FCOVERcrop$FCOVER.1km.3
+FCOVER2014 <- FCOVERcrop$FCOVER.1km.4
+FCOVER2020 <- FCOVERcrop$FCOVER.1km.5
+
+
+# Or plot them with ggplot
+g1 <- ggplot() + geom_raster(FCOVER1999, mapping = aes(x=x, y=y, fill=FCOVER.1km.1)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in 1999") + labs(fill = "FCOVER")
+g2 <- ggplot() + geom_raster(FCOVER2004, mapping = aes(x=x, y=y, fill=FCOVER.1km.2)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in 2004") + labs(fill = "FCOVER")
+g3 <- ggplot() + geom_raster(FCOVER2009, mapping = aes(x=x, y=y, fill=FCOVER.1km.3)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in 2009") + labs(fill = "FCOVER")
+g4 <- ggplot() + geom_raster(FCOVER2014, mapping = aes(x=x, y=y, fill=FCOVER.1km.4)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in 2014") + labs(fill = "FCOVER")
+g5 <- ggplot() + geom_raster(FCOVER2020, mapping = aes(x=x, y=y, fill=FCOVER.1km.5)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in 2019") + labs(fill = "FCOVER")
+
+# I have also tried this one: scale_fill_viridis(direction = -1, option = "magma") with the order of colors reversed but 
+# Plot them together (multiframe ggplot) with grid.arrange function (from gridExtra package)
+grid.arrange(g1, g2, g3, g4, g5, nrow=3)
+#or with patchwork package 
+g2 + g1 + g3 / g4 + g5
+
+# Export file
+pdf("fcover_ggplot.pdf", width=30, height=20) #migliorare
+par(mfrow=c(2,3))
+grid.arrange(g1, g2, g3, g4, g5, nrow=3)
+dev.off()
 
 # Create a color palette with COLORBREWER 2.0
 class5_YlGn <- colorRampPalette(colors = c('#ffffcc','#c2e699','#78c679','#31a354','#006837'))(100) #da rifare
@@ -68,19 +88,6 @@ plot(FCOVERcrop$FCOVER2009, main="Forest Cover in 2009", col=class5_YlGn)
 plot(FCOVERcrop$FCOVER2014, main="Forest Cover in 2014", col=class5_YlGn)
 plot(FCOVERcrop$FCOVER2020, main="Forest Cover in 2020", col=class5_YlGn)
 dev.off()
-
-# Or plot them with ggplot
-g1 <- ggplot() + geom_raster(FCOVERstack$FCOVER1999, mapping = aes(x=x, y=y, fill=FCOVER1999)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in 1999") 
-g2 <- ggplot() + geom_raster(FCOVER2004, mapping = aes(x=x, y=y, fill= Fraction.of.green.Vegetation.Cover.1km.2)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in 2004") + labs(fill = "FCOVER")
-g3 <- ggplot() + geom_raster(FCOVER2009, mapping = aes(x=x, y=y, fill= Fraction.of.green.Vegetation.Cover.1km.3)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in 2009") + labs(fill = "FCOVER")
-g4 <- ggplot() + geom_raster(FCOVER2014, mapping = aes(x=x, y=y, fill= Fraction.of.green.Vegetation.Cover.1km.4)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in 2014") + labs(fill = "FCOVER")
-g5 <- ggplot() + geom_raster(FCOVER1999, mapping = aes(x=x, y=y, fill= Fraction.of.green.Vegetation.Cover.1km.5)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in 2019") + labs(fill = "FCOVER")
-
-# I have also tried this one: scale_fill_viridis(direction = -1, option = "magma") with the order of colors reversed but 
-# Plot them together (multiframe ggplot) with grid.arrange function (from gridExtra package)
-grid.arrange(g1, g2, g3, g4, g5, nrow=3)
-#or with patchwork package 
-g2 + g1 + g3 / g4 + g5
 
 # Compare fcover between each year with a linear regression model: 
 par(mfrow=c(3,4))
@@ -124,6 +131,7 @@ dif2 <- FCOVER2004 - FCOVER2009
 dif3 <- FCOVER2009 - FCOVER2014
 dif4 <- FCOVER2014 - FCOVER2020
 dif5 <- FCOVER1999 - FCOVER2020
+
 
 # I have also tried this one: scale_fill_viridis(direction = -1, option = "magma") with the order of colors reversed but 
 # Create a color palette with COLORBREWER 2.0 
@@ -177,23 +185,6 @@ class3_RdBu <- colorRampPalette(colors = c('#ef8a62','#f7f7f7','#67a9cf'))(255)
 difw <- plot(dif1, col=class3_RdBu, main = "Difference in LSR between 2017 and 2021")
 
 
-##
-veg2006 <- v_cropped$FCOVER2006
-p_veg2006 <- ggplot() + 
-                  geom_raster(veg2006, mapping = aes(x = x, y = y, fill = FCOVER2006)) +
-                  scale_fill_viridis(option="plasma") + 
-                  ggtitle("Fraction of green vegetation cover - January 2006")
-
-cldif <- colorRampPalette(c('darkred','darkred', 'darkred', 'darkred', 'aliceblue', 'aliceblue', 'darkgreen', 'darkgreen', 'darkgreen', 'darkgreen'))(100)
-
-fcdif0620 <- veg2020 - veg2006
-plot(fcdif0620, col=cl, main="Difference of FCOVER", sub="Between 2006 and 2020")
-
-# let's see the distribution of each image using the hist() function
-# plotting frequency distributions of data
-hist(veg2006)
-hist(veg2020)
-
 
 ##### LAI
 LAIrlist <- list.files(pattern="LAI") # listing all the files with the pattern present in the directory
@@ -216,6 +207,7 @@ hist
 abline
 pairs(LAIcrop)
 
+
 #####
 
 #import the file
@@ -228,32 +220,53 @@ shp <- shapefile("Sarawak_oil_palm_concessions.shp")
 
 
 
-#####
+##### tiff
 
 rGFC <- list.files(pattern="GFC")
 rGFC
 
-rGFC_rast <- lapply(rGFC, brick)
+rGFC_rast <- lapply(rGFC, raster)
 rGFC_rast 
 
-loss1 <- rGFC_rast[[1]]
-tcover1 <- rGFC_rast[[2]]
-loss2 <- rGFC_rast[[3]]
-tcover2 <- rGFC_rast[[4]]
+tcover2 <- rGFC_rast[[2]]
+tcover1 <- rGFC_rast[[1]]
 
-plot(loss1)
+par(mfrow=c(1,2))
+plot(tcover1)
+plot(tcover2)
 
 
-forestbiome <- readOGR("/Users/sarapiccini/Documents/datandvi/forest_biome/forest_biome.shp")
-plot(forestbiome)
+##### shp
+
 oilpalm <- readOGR("/Users/sarapiccini/Documents/datandvi/Sarawak_oil_palm_concessions/Sarawak_oil_palm_concessions.shp")
-plot(forestbiome)
-noforest <- readOGR("/Users/sarapiccini/Documents/datandvi/no_forest/no_forest.shp")
-plot(forestbiome)
-public <- readOGR("/Users/sarapiccini/Documents/datandvi/deter-amz-public-2022fev11/deter-amz-public-2022fev11.shp")
-plot(forestbiome)
-def2007 <- readOGR("/Users/sarapiccini/Documents/datandvi/accumulated_deforestation_2007_biome/accumulated_deforestation_2007_biome.shp")
-plot(forestbiome)
-biome<- readOGR("forest_biome.shp")
+oilpalm
+#funziona
+plot(oilpalm)
+foilpalm <- fortify(oilpalm)
+goilpalm <-ggplot()+geom_polygon(data=foilpalm ,aes(x=long, y=lat, group=group))+theme_bw()
+ggoilpalm <- ggplot() +
+geom_raster(foilpalm, mapping = aes(x = x, y = y, fill = foilpam)) +
+scale_fill_viridis(option="plasma") +
+geom_polygon(data=foilpalm,aes(x=long, y=lat, group=group), fill="transparent",color="black",lwd=0.8) +
+ggtitle("Oil Palm")
+
+
 oilpalm <- readOGR("Sarawak_oil_palm_concessions.shp")
-public <- readOGR("deter-amz-public-2022fev11.shp")
+#errore
+oilpalm <- readOGR( 
+  dsn= paste0(getwd(),"/Users/sarapiccini/Documents/datandvi/Sarawak_oil_palm_concessions/") , 
+  layer="Sarawak_oil_palm_concessions",
+  verbose=FALSE
+)
+#errore
+
+
+
+plot(oilpalm)
+foilpalm <- fortify(oilpalm)
+goilpalm <-ggplot()+geom_polygon(data=foilpalm ,aes(x=long, y=lat, group=group))+theme_bw()
+ggoilpalm <- ggplot() +
+geom_raster(foilpalm, mapping = aes(x = x, y = y, fill = foilpam)) +
+scale_fill_viridis(option="plasma") +
+geom_polygon(data=foilpalm,aes(x=long, y=lat, group=group), fill="transparent",color="black",lwd=0.8) +
+ggtitle("Oil Palm")
