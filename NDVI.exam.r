@@ -35,7 +35,7 @@ names(FCOVERstack) <- c("FCOVER.1km.1","FCOVER.1km.2","FCOVER.1km.3","FCOVER.1km
 plot(FCOVERstack)
 
 # Crop the image over
-ext <-c(99.6419, 119.2758, 0.8527, 7.3529)
+ext <-c(90.5, 120, -10, 10)
 FCOVERcrop <- crop(FCOVERstack, ext)
 plot(FCOVERcrop)
 FCOVERcrop
@@ -45,17 +45,16 @@ FCOVER1999 <- FCOVERcrop$FCOVER.1km.1
 FCOVER2004 <- FCOVERcrop$FCOVER.1km.2
 FCOVER2009 <- FCOVERcrop$FCOVER.1km.3
 FCOVER2014 <- FCOVERcrop$FCOVER.1km.4
-FCOVER2020 <- FCOVERcrop$FCOVER.1km.5
+FCOVER2019 <- FCOVERcrop$FCOVER.1km.5
 
-
-# Or plot them with ggplot
+# Plot them with ggplot
 g1 <- ggplot() + geom_raster(FCOVER1999, mapping = aes(x=x, y=y, fill=FCOVER.1km.1)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in 1999") + labs(fill = "FCOVER")
 g2 <- ggplot() + geom_raster(FCOVER2004, mapping = aes(x=x, y=y, fill=FCOVER.1km.2)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in 2004") + labs(fill = "FCOVER")
 g3 <- ggplot() + geom_raster(FCOVER2009, mapping = aes(x=x, y=y, fill=FCOVER.1km.3)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in 2009") + labs(fill = "FCOVER")
 g4 <- ggplot() + geom_raster(FCOVER2014, mapping = aes(x=x, y=y, fill=FCOVER.1km.4)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in 2014") + labs(fill = "FCOVER")
-g5 <- ggplot() + geom_raster(FCOVER2020, mapping = aes(x=x, y=y, fill=FCOVER.1km.5)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in 2019") + labs(fill = "FCOVER")
+g5 <- ggplot() + geom_raster(FCOVER2019, mapping = aes(x=x, y=y, fill=FCOVER.1km.5)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in 2019") + labs(fill = "FCOVER")
 
-# I have also tried this one: scale_fill_viridis(direction = -1, option = "magma") with the order of colors reversed but 
+# I have also tried this one: scale_fill_viridis(direction = -1, option = "magma") with the order of colors reversed but it does not work well
 # Plot them together (multiframe ggplot) with grid.arrange function (from gridExtra package)
 grid.arrange(g1, g2, g3, g4, g5, nrow=3)
 #or with patchwork package 
@@ -67,26 +66,26 @@ par(mfrow=c(2,3))
 grid.arrange(g1, g2, g3, g4, g5, nrow=3)
 dev.off()
 
-# Create a color palette with COLORBREWER 2.0
+# Create a color palette with COLORBREWER 2.0 to plot FCover
 class5_YlGn <- colorRampPalette(colors = c('#ffffcc','#c2e699','#78c679','#31a354','#006837'))(100) #da rifare
 plot(FCOVERcrop, col=class5_YlGn)
 
 # Plot FCOVER of each year
 par(mfrow=c(2,3))
-plot(FCOVERcrop$FCOVER1999, main="Forest Cover in 1999", col=class5_YlGn)
-plot(FCOVERcrop$FCOVER2004, main="Forest Cover in 2004", col=class5_YlGn)
-plot(FCOVERcrop$FCOVER2009, main="Forest Cover in 2009", col=class5_YlGn)
-plot(FCOVERcrop$FCOVER2014, main="Forest Cover in 2014", col=class5_YlGn)
-plot(FCOVERcrop$FCOVER2020, main="Forest Cover in 2020", col=class5_YlGn)
+plot(FCOVER1999, main="Forest Cover in 1999", col=class5_YlGn)
+plot(FCOVER2004, main="Forest Cover in 2004", col=class5_YlGn)
+plot(FCOVER2009, main="Forest Cover in 2009", col=class5_YlGn)
+plot(FCOVER2014, main="Forest Cover in 2014", col=class5_YlGn)
+plot(FCOVER2019, main="Forest Cover in 2019", col=class5_YlGn)
 
 # Export file
-pdf("fcover.pdf", width=30, height=10) #migliorare
-par(mfrow=c(2,3))
-plot(FCOVERcrop$FCOVER1999, main="Forest Cover in 1999", col=class5_YlGn)
-plot(FCOVERcrop$FCOVER2004, main="Forest Cover in 2004", col=class5_YlGn)
-plot(FCOVERcrop$FCOVER2009, main="Forest Cover in 2009", col=class5_YlGn)
-plot(FCOVERcrop$FCOVER2014, main="Forest Cover in 2014", col=class5_YlGn)
-plot(FCOVERcrop$FCOVER2020, main="Forest Cover in 2020", col=class5_YlGn)
+pdf("fcover.pdf", width=40, height=20) 
+par(mfrow=c(3,2))
+plot(FCOVER1999, main="Forest Cover in 1999", col=class5_YlGn)
+plot(FCOVER2004, main="Forest Cover in 2004", col=class5_YlGn)
+plot(FCOVER2009, main="Forest Cover in 2009", col=class5_YlGn)
+plot(FCOVER2014, main="Forest Cover in 2014", col=class5_YlGn)
+plot(FCOVER2019, main="Forest Cover in 2019", col=class5_YlGn)
 dev.off()
 
 # Compare fcover between each year with a linear regression model: 
@@ -97,7 +96,7 @@ plot(FCOVER1999, FCOVER2009, xlim=c(0, 1), ylim=c(0, 1), xlab="FCOVER 1999", yla
 abline(0,1, col="red")
 plot(FCOVER1999, FCOVER2014, xlim=c(0, 1), ylim=c(0, 1), xlab="FCOVER 1999", ylab="FCOVER 2014")
 abline(0,1, col="red")
-plot(FCOVER1999, FCOVER2020, xlim=c(0, 1), ylim=c(0, 1), xlab="FCOVER 1999", ylab="FCOVER 2020")
+plot(FCOVER1999, FCOVER2019, xlim=c(0, 1), ylim=c(0, 1), xlab="FCOVER 1999", ylab="FCOVER 2020")
 abline(0,1, col="red")
 plot(FCOVER2004, FCOVER2009, xlim=c(0, 1), ylim=c(0, 1), xlab="FCOVER 2004", ylab="FCOVER 2009")
 abline(0,1, col="red")
@@ -111,8 +110,35 @@ plot(FCOVER2009, FCOVER2019, xlim=c(0, 1), ylim=c(0, 1), xlab="FCOVER 2009", yla
 abline(0,1, col="red")
 plot(FCOVER2014, FCOVER2019, xlim=c(0, 1), ylim=c(0, 1), xlab="FCOVER 2014", ylab="FCOVER 2019")
 abline(0,1, col="red")
-plot(FCOVER1999, FCOVER2020, xlim=c(0, 1), ylim=c(0, 1), xlab="FCOVER 2014", ylab="FCOVER 2020")
+plot(FCOVER1999, FCOVER2019, xlim=c(0, 1), ylim=c(0, 1), xlab="FCOVER 2014", ylab="FCOVER 2020")
 abline(0,1, col="red")
+
+#Export them
+pdf("ablineFCOVER.pdf", width=40, height=20) 
+par(mfrow=c(3,4))
+plot(FCOVER1999, FCOVER2004, xlim=c(0, 1), ylim=c(0, 1), xlab="FCOVER 1999", ylab="FCOVER 2004")
+abline(0,1, col="red")
+plot(FCOVER1999, FCOVER2009, xlim=c(0, 1), ylim=c(0, 1), xlab="FCOVER 1999", ylab="FCOVER 2009")
+abline(0,1, col="red")
+plot(FCOVER1999, FCOVER2014, xlim=c(0, 1), ylim=c(0, 1), xlab="FCOVER 1999", ylab="FCOVER 2014")
+abline(0,1, col="red")
+plot(FCOVER1999, FCOVER2020, xlim=c(0, 1), ylim=c(0, 1), xlab="FCOVER 1999", ylab="FCOVER 2019")
+abline(0,1, col="red")
+plot(FCOVER2004, FCOVER2009, xlim=c(0, 1), ylim=c(0, 1), xlab="FCOVER 2004", ylab="FCOVER 2009")
+abline(0,1, col="red")
+plot(FCOVER2004, FCOVER2014, xlim=c(0, 1), ylim=c(0, 1), xlab="FCOVER 2004", ylab="FCOVER 2014")
+abline(0,1, col="red")
+plot(FCOVER2004, FCOVER2019, xlim=c(0, 1), ylim=c(0, 1), xlab="FCOVER 2004", ylab="FCOVER 2019")
+abline(0,1, col="red")
+plot(FCOVER2009, FCOVER2014, xlim=c(0, 1), ylim=c(0, 1), xlab="FCOVER 2009", ylab="FCOVER 2014")
+abline(0,1, col="red")
+plot(FCOVER2009, FCOVER2019, xlim=c(0, 1), ylim=c(0, 1), xlab="FCOVER 2009", ylab="FCOVER 2019")
+abline(0,1, col="red")
+plot(FCOVER2014, FCOVER2019, xlim=c(0, 1), ylim=c(0, 1), xlab="FCOVER 2014", ylab="FCOVER 2019")
+abline(0,1, col="red")
+plot(FCOVER1999, FCOVER2019, xlim=c(0, 1), ylim=c(0, 1), xlab="FCOVER 2014", ylab="FCOVER 2019")
+abline(0,1, col="red")
+dev.off()
 
 # Plot frequency distribution of data: frequecies : how pixels are distributed in each different class - frequencies of each classes
 par(mfrow=c(3,2))
@@ -120,75 +146,51 @@ hist(FCOVER1999)
 hist(FCOVER2004)
 hist(FCOVER2009)
 hist(FCOVER2014)
-hist(FCOVER2020)
+hist(FCOVER2019)
+
+#Export them
+pdf("histFCOVER.pdf", width=40, height=20) 
+par(mfrow=c(3,2))
+hist(FCOVER1999)
+hist(FCOVER2004)
+hist(FCOVER2009)
+hist(FCOVER2014)
+hist(FCOVER2019)
+dev.off()
 
 # Or use pairs function: density plot (histograms), scatterplot, and Pearson coefficient
 pairs(FCOVERcrop)
 
-# Plot the difference between each years - Compute the difference between the layers
-dif1 <- FCOVER1999 - FCOVER2004
-dif2 <- FCOVER2004 - FCOVER2009
-dif3 <- FCOVER2009 - FCOVER2014
-dif4 <- FCOVER2014 - FCOVER2020
-dif5 <- FCOVER1999 - FCOVER2020
-
+# Plot the difference between 1999 and 2019 - Compute the difference between the layers
+dif5 <- FCOVER1999 - FCOVER2019
 
 # I have also tried this one: scale_fill_viridis(direction = -1, option = "magma") with the order of colors reversed but 
 # Create a color palette with COLORBREWER 2.0 
 # x = 0 -> no changes: colored in white
-class3_RdBu <- colorRampPalette(colors = c('#ef8a62','#f7f7f7','#67a9cf'))(255)
-difw <- plot(dif5, col=class3_RdBu, main = "Difference in Forest Cover between 1999 and 2019")
+class3_RdBu <- colorRampPalette(colors = c('#ef8a62','#f7f7f7','#67a9cf'))(100)
+plot(dif5, col=class3_RdBu, main = "Difference in Forest Cover between 1999 and 2019")
 # x = 0 -> no changes: colored in black
-class3_RdBu2 <- colorRampPalette(colors = c('#ef8a62','#636363','#7fbf7b'))(255)
-difb <- plot(dif5, col=class3_RdBu2, main = "Difference in Forest Cover between 1999 and 2019")
+class3_RdBu2 <- colorRampPalette(colors = c('#ef8a62','#636363','#7fbf7b'))(100)
+plot(dif5, col=class3_RdBu2, main = "Difference in Forest Cover between 1999 and 2019")
 
 # Plot together
 par(mfrow=c(1,2))
-difw 
-difb
+plot(dif5, col=class3_RdBu, main = "Difference in Forest Cover between 1999 and 2019")
+plot(dif5, col=class3_RdBu2, main = "Difference in Forest Cover between 1999 and 2019")
 
 # Export
-pdf("fcoverdif.pdf", width=30, height=10) #migliorare
+pdf("fcoverdif.pdf", width=15, height=10) 
 par(mfrow=c(2,3))
-difw 
-difb
+plot(dif5, col=class3_RdBu, main = "Difference in Forest Cover between 1999 and 2019")
+plot(dif5, col=class3_RdBu2, main = "Difference in Forest Cover between 1999 and 2019")
 dev.off()
-
-######
-
-
-rLST<- list.files(pattern="LST")
-rLST
-
-rLST_rast <- lapply(rLST, raster)
-rLST_rast 
-
-# Creating a stack
-LSTstack <- stack(rLST_rast) 
-LSTstack 
-plot(LSTstack)
-
-# Crop the image over Central Africa
-LSTcrop <- crop(LSTstack, ext)
-plot(LSTcrop)
-LSTcrop
-
-
-LST2017 <- LSTcrop$Fraction.of.Valid.Observations.1
-LST2018 <- LSTcrop$Fraction.of.Valid.Observations.2
-LST2020 <- LSTcrop$Fraction.of.Valid.Observations.3
-LST2021 <- LSTcrop$Fraction.of.Valid.Observations.4
-
-dif1 <- LST2017 - LST2021
-
-class3_RdBu <- colorRampPalette(colors = c('#ef8a62','#f7f7f7','#67a9cf'))(255)
-difw <- plot(dif1, col=class3_RdBu, main = "Difference in LSR between 2017 and 2021")
-
-
 
 ##### LAI
 LAIrlist <- list.files(pattern="LAI") # listing all the files with the pattern present in the directory
 LAIrlist
+LAI2020 <- brick("c_gls_LAI-RT0_202006300000_GLOBE_PROBAV_V2.0.1.nc")
+LAI1999 <- raster("c_gls_LAI_200907310000_GLOBE_VGT_V2.0.1.nc")
+LAI1999 <- raster("c_gls_LAI_199908200000_GLOBE_VGT_V2.0.2.nc")
 
 # to make the list a brick list - apply brick function to all the files (multi-layers)
 LAIlist_rast <- lapply(LAIrlist, raster) 
@@ -207,66 +209,52 @@ hist
 abline
 pairs(LAIcrop)
 
-
-#####
-
-#import the file
-# st_read() requires the file path to the shapefile.
-palmoil <- st_read("/Users/sarapiccini/Documents/datandvi/Sarawak_oil_palm_concessions.shp")
-shapename <- read_sf('/Users/sarapiccini/Documents/datandvi/Sarawak_oil_palm_concessions.shp')
-shape <- readOGR(dsn = ".", layer = "Sarawak_oil_palm_concessions.shp")
-shp <- shapefile("Sarawak_oil_palm_concessions.shp")
-
-
-
-
 ##### tiff
 
-rGFC <- list.files(pattern="GFC")
-rGFC
+palmoil <- brick("Palm_oil_plantations.tiff")
+palmoil
+plotRGB(palmoil, r=1, g=2, b=3, stretch = "lin")
 
-rGFC_rast <- lapply(rGFC, raster)
-rGFC_rast 
+hist(palmoil)
 
-tcover2 <- rGFC_rast[[2]]
-tcover1 <- rGFC_rast[[1]]
-
-par(mfrow=c(1,2))
-plot(tcover1)
-plot(tcover2)
+# FCOVER April 2019 in Sarawak - Malaysia
 
 
-##### shp
 
+##### shp from global forest watch
+# https://data.globalforestwatch.org/datasets/gfw::sarawak-oil-palm-concessions/about - April 2019
 oilpalm <- readOGR("/Users/sarapiccini/Documents/datandvi/Sarawak_oil_palm_concessions/Sarawak_oil_palm_concessions.shp")
 oilpalm
-#funziona
 plot(oilpalm)
+class()
+summary()
 foilpalm <- fortify(oilpalm)
-goilpalm <-ggplot()+geom_polygon(data=foilpalm ,aes(x=long, y=lat, group=group))+theme_bw()
-ggoilpalm <- ggplot() +
-geom_raster(foilpalm, mapping = aes(x = x, y = y, fill = foilpam)) +
-scale_fill_viridis(option="plasma") +
-geom_polygon(data=foilpalm,aes(x=long, y=lat, group=group), fill="transparent",color="black",lwd=0.8) +
-ggtitle("Oil Palm")
 
+gfoilpalm <-ggplot() + geom_polygon(data = foilpalm , aes(x = long, y = lat, group = group), fill="#69b3a2", color="white") + theme_void()
 
-oilpalm <- readOGR("Sarawak_oil_palm_concessions.shp")
-#errore
-oilpalm <- readOGR( 
-  dsn= paste0(getwd(),"/Users/sarapiccini/Documents/datandvi/Sarawak_oil_palm_concessions/") , 
-  layer="Sarawak_oil_palm_concessions",
-  verbose=FALSE
-)
-#errore
+ggoilpalm <- ggplot() + geom_raster(FCOVER2019, mapping = aes(x = x, y = y, fill = FCOVER.1km.5)) + scale_fill_viridis(option="magma") + labs(fill = "FCOVER") +
+geom_polygon(data=foilpalm,aes(x=long, y=lat, group=group), fill="#69b3a2",color="white", lwd=0.1) + theme_void() +
+ggtitle("Oil Palm Concessions")
 
+# https://data.globalforestwatch.org/datasets/gfw::sarawak-protected-areas/about - April 2019
+protectedareas <- readOGR("/Users/sarapiccini/Documents/datandvi/Sarawak_protected_areas/Sarawak_protected_areas.shp")
+protectedareas
+plot(protectedareas)
+class(protectedareas) #SpatialPolygonsDataFrame
+summary(protectedareas)
+fprotectedareas <- fortify(protectedareas)
 
+gfprotectedareas <- ggplot() + geom_polygon(data = fprotectedareas, aes(x = long, y = lat, group = group), fill="#69b3a2", color="white") + theme_void()
 
-plot(oilpalm)
-foilpalm <- fortify(oilpalm)
-goilpalm <-ggplot()+geom_polygon(data=foilpalm ,aes(x=long, y=lat, group=group))+theme_bw()
-ggoilpalm <- ggplot() +
-geom_raster(foilpalm, mapping = aes(x = x, y = y, fill = foilpam)) +
-scale_fill_viridis(option="plasma") +
-geom_polygon(data=foilpalm,aes(x=long, y=lat, group=group), fill="transparent",color="black",lwd=0.8) +
-ggtitle("Oil Palm")
+ggprotectedareas <- ggplot() + geom_raster(FCOVER2019, mapping = aes(x = x, y = y, fill = FCOVER.1km.5)) + scale_fill_viridis(option="magma") + labs(fill = "FCOVER") +
+geom_polygon(data=fprotectedareas,aes(x=long, y=lat, group=group), fill="#69b3a2",color="white",lwd=0.1) + theme_void() +
+ggtitle("Protected Areas")
+
+# Plot together
+ggoilpalm + ggprotectedareas
+
+# Export
+pdf("OilPalmCrops_ProtectedAreas.pdf", width=20, height=10) 
+ggoilpalm + ggprotectedareas
+dev.off()
+
