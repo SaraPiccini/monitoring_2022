@@ -34,7 +34,7 @@ FCOVERstack
 names(FCOVERstack) <- c("FCOVER.1km.1","FCOVER.1km.2","FCOVER.1km.3","FCOVER.1km.4","FCOVER.1km.5")
 plot(FCOVERstack)
 
-# Crop the image over
+# Crop the image over Indonesia
 ext <-c(90.5, 120, -10, 10)
 FCOVERcrop <- crop(FCOVERstack, ext)
 plot(FCOVERcrop)
