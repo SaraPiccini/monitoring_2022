@@ -68,7 +68,7 @@ grid.arrange(g1, g2, g3, g4, g5, nrow=3)
 g2 + g1 + g3 / g4 + g5
 
 # Export file
-png("outputs\fcover_ggplot.png", res = 300, width = 3000, heigh = 2000)
+png("outputs/fcover_ggplot.png", res = 300, width = 3000, heigh = 2000)
 grid.arrange(g1, g2, g3, g4, g5, nrow=3)
 dev.off()
 
@@ -85,7 +85,7 @@ plot(FCOVER2014, main="Forest Cover in 2014", col=class5_YlGn)
 plot(FCOVER2019, main="Forest Cover in 2019", col=class5_YlGn)
 
 # Export file
-png("outputs\fcover.png", res = 300, width = 3000, heigh = 2000)
+png("outputs/fcover.png", res = 300, width = 3000, heigh = 2000)
 par(mfrow=c(3,2))
 plot(FCOVER1999, main="Forest Cover in 1999", col=class5_YlGn)
 plot(FCOVER2004, main="Forest Cover in 2004", col=class5_YlGn)
@@ -120,7 +120,7 @@ plot(FCOVER1999, FCOVER2019, xlim=c(0, 1), ylim=c(0, 1), xlab="FCOVER 2014", yla
 abline(0,1, col="red")
 
 #Export them
-png("outputs\ablineFCOVER.png", res = 300, width = 3000, heigh = 2000)
+png("outputs/ablineFCOVER.png", res = 300, width = 3000, heigh = 2000)
 par(mfrow=c(3,4))
 plot(FCOVER1999, FCOVER2004, xlim=c(0, 1), ylim=c(0, 1), xlab="FCOVER 1999", ylab="FCOVER 2004")
 abline(0,1, col="red")
@@ -128,7 +128,7 @@ plot(FCOVER1999, FCOVER2009, xlim=c(0, 1), ylim=c(0, 1), xlab="FCOVER 1999", yla
 abline(0,1, col="red")
 plot(FCOVER1999, FCOVER2014, xlim=c(0, 1), ylim=c(0, 1), xlab="FCOVER 1999", ylab="FCOVER 2014")
 abline(0,1, col="red")
-plot(FCOVER1999, FCOVER2020, xlim=c(0, 1), ylim=c(0, 1), xlab="FCOVER 1999", ylab="FCOVER 2019")
+plot(FCOVER1999, FCOVER2019, xlim=c(0, 1), ylim=c(0, 1), xlab="FCOVER 1999", ylab="FCOVER 2019")
 abline(0,1, col="red")
 plot(FCOVER2004, FCOVER2009, xlim=c(0, 1), ylim=c(0, 1), xlab="FCOVER 2004", ylab="FCOVER 2009")
 abline(0,1, col="red")
@@ -155,7 +155,7 @@ hist(FCOVER2014)
 hist(FCOVER2019)
 
 #Export them
-png("outputs\histFCOVER.png", res = 300, width = 3000, heigh = 2000)
+png("outputs/histFCOVER.png", res = 300, width = 3000, heigh = 2000)
 par(mfrow=c(3,2))
 hist(FCOVER1999)
 hist(FCOVER2004)
@@ -185,10 +185,10 @@ plot(dif5, col=class3_RdBu, main = "Difference in Forest Cover between 1999 and 
 plot(dif5, col=class3_RdBu2, main = "Difference in Forest Cover between 1999 and 2019")
 
 # Export
-png("outputs\fcoverdif.png", res = 300, width = 3000, heigh = 2000)
-par(mfrow=c(2,3))
-plot(dif5, col=class3_RdBu, main = "Difference in Forest Cover between 1999 and 2019")
-plot(dif5, col=class3_RdBu2, main = "Difference in Forest Cover between 1999 and 2019")
+png("outputs/fcoverdif.png", res = 300, width = 3000, heigh = 4000)
+par(mfrow=c(2,1))
+plot(dif5, col=class3_RdBu, main = "Difference of the Fraction of vegetation cover between 1999 and 2019")
+plot(dif5, col=class3_RdBu2, main = "Difference of the Fraction of vegetation cover between 1999 and 2019")
 dev.off()
 
 ##### LAI
@@ -227,6 +227,7 @@ png("outputs/tpalmoilplant.png", res = 300, width = 3000, heigh = 2000)
 plotRGB(palmoil, r=1, g=2, b=3, stretch = "lin")
 dev.off()
 
+
 # FCOVER April 2019 in Sarawak - Malaysia 
 
 malaysia2019 <- raster("c_gls_FCOVER300_201910100000_GLOBE_PROBAV_V1.0.1.nc")
@@ -235,7 +236,11 @@ malaysia2019c <- crop(malaysia2019, ext2)
 # Convert raster object into a dataframe to make a ggplot
 malyasia2019_df <- raster::as.data.frame(malaysia2019c, xy=TRUE) 
 
-g6 <- ggplot() + geom_raster(malyasia2019_df, mapping = aes(x=x, y=y, fill=Fraction.of.green.Vegetation.Cover.333m)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in Malaysia in 2019") + labs(fill = "FCOVER")
+g6 <- ggplot() + geom_raster(malyasia2019_df, mapping = aes(x=x, y=y, fill=Fraction.of.green.Vegetation.Cover.333m)) + scale_fill_viridis(option = "magma") + ggtitle("Fraction of vegetation cover in Malaysia in 2019") + labs(fill = "FCOVER")
+
+png("outputs/malaysia.png", res = 300, width = 2000, heigh = 2000))
+g6 <- ggplot() + geom_raster(malyasia2019_df, mapping = aes(x=x, y=y, fill=Fraction.of.green.Vegetation.Cover.333m)) + scale_fill_viridis(option = "magma") + ggtitle("Fraction of vegetation cover in Malaysia in 2019") + labs(fill = "FCOVER")
+dev.off()
 
 # shape file from Global Forest Watch on Oil Palm Concessions and Crops in April 2019
 oilpalm <- readOGR("/Users/sarapiccini/Documents/datandvi/Sarawak_oil_palm_concessions/Sarawak_oil_palm_concessions.shp")
@@ -274,10 +279,10 @@ gfoilpalm + gfprotectedareas
 ggoilpalm + ggprotectedareas
 
 # Export
-png("outputs\shapefiles.png", res = 300, width = 3000, heigh = 2000)
+png("outputs/shapefiles.png", res = 300, width = 3000, heigh = 2000)
 gfoilpalm + gfprotectedareas
 dev.off()
-png("outputs\OilPalmCrops_ProtectedAreas.png", res = 300, width = 3000, heigh = 2000)
+png("outputs/OilPalmCrops_ProtectedAreas.png", res = 300, width = 3000, heigh = 2000)
 ggoilpalm + ggprotectedareas
 dev.off()
 
