@@ -216,7 +216,7 @@ abline
 pairs(LAIcrop)
 
 
-# Palm oil plantations 
+# Palm oil plantations - ESA data 
 palmoil <- brick("Palm_oil_plantations.tiff")
 # Check output 
 palmoil  # 3 bands: Palm_oil_plantations.1, Palm_oil_plantations.2, Palm_oil_plantations.3
