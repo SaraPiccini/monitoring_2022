@@ -40,28 +40,26 @@ FCOVERcrop <- crop(FCOVERstack, ext)
 plot(FCOVERcrop)
 FCOVERcrop
 
-
-
 # and then we separate the_df files, assigning to each element of the crop a name
-FCOVER1999 <- FCOVERcrop_df$FCOVER.1km.1
-FCOVER2004 <- FCOVERcrop_df$FCOVER.1km.2
-FCOVER2009 <- FCOVERcrop_df$FCOVER.1km.3
-FCOVER2014 <- FCOVERcrop_df$FCOVER.1km.4
-FCOVER2019 <- FCOVERcrop_df$FCOVER.1km.5
+FCOVER1999 <- FCOVERcrop$FCOVER.1km.1
+FCOVER2004 <- FCOVERcrop$FCOVER.1km.2
+FCOVER2009 <- FCOVERcrop$FCOVER.1km.3
+FCOVER2014 <- FCOVERcrop$FCOVER.1km.4
+FCOVER2019 <- FCOVERcrop$FCOVER.1km.5
 
+# Convert raster into data frames to use ggplot
 FCOVER1999_df <- raster::as.data.frame(FCOVER1999, xy=TRUE) 
 FCOVER2004_df <- raster::as.data.frame(FCOVER2004, xy=TRUE) 
 FCOVER2009_df <- raster::as.data.frame(FCOVER2009, xy=TRUE) 
 FCOVER2014_df <- raster::as.data.frame(FCOVER2014, xy=TRUE) 
 FCOVER2019_df <- raster::as.data.frame(FCOVER2019, xy=TRUE) 
 
-
 # Plot them with ggplot
-g1 <- ggplot() + geom_raster(FCOVER1999_df, mapping = aes(x=x, y=y, fill=FCOVER1999)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in 1999") + labs(fill = "FCOVER")
-g2 <- ggplot() + geom_raster(FCOVER2004, mapping = aes(x=x, y=y, fill=FCOVER.1km.2)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in 2004") + labs(fill = "FCOVER")
-g3 <- ggplot() + geom_raster(FCOVER2009, mapping = aes(x=x, y=y, fill=FCOVER.1km.3)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in 2009") + labs(fill = "FCOVER")
-g4 <- ggplot() + geom_raster(FCOVER2014, mapping = aes(x=x, y=y, fill=FCOVER.1km.4)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in 2014") + labs(fill = "FCOVER")
-g5 <- ggplot() + geom_raster(FCOVER2019, mapping = aes(x=x, y=y, fill=FCOVER.1km.5)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in 2019") + labs(fill = "FCOVER")
+g1 <- ggplot() + geom_raster(FCOVER1999_df, mapping = aes(x=x, y=y, fill=FCOVER.1km.1)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in 1999") + labs(fill = "FCOVER")
+g2 <- ggplot() + geom_raster(FCOVER2004_df, mapping = aes(x=x, y=y, fill=FCOVER.1km.2)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in 2004") + labs(fill = "FCOVER")
+g3 <- ggplot() + geom_raster(FCOVER2009_df, mapping = aes(x=x, y=y, fill=FCOVER.1km.3)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in 2009") + labs(fill = "FCOVER")
+g4 <- ggplot() + geom_raster(FCOVER2014_df, mapping = aes(x=x, y=y, fill=FCOVER.1km.4)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in 2014") + labs(fill = "FCOVER")
+g5 <- ggplot() + geom_raster(FCOVER2019_df, mapping = aes(x=x, y=y, fill=FCOVER.1km.5)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in 2019") + labs(fill = "FCOVER")
 
 # I have also tried this one: scale_fill_viridis(direction = -1, option = "magma") with the order of colors reversed but it does not work well
 # Plot them together (multiframe ggplot) with grid.arrange function (from gridExtra package)
@@ -70,13 +68,12 @@ grid.arrange(g1, g2, g3, g4, g5, nrow=3)
 g2 + g1 + g3 / g4 + g5
 
 # Export file
-pdf("fcover_ggplot.pdf", width=30, height=20) #migliorare
-par(mfrow=c(2,3))
+png("outputs\fcover_ggplot.png", res = 300, width = 3000, heigh = 2000)
 grid.arrange(g1, g2, g3, g4, g5, nrow=3)
 dev.off()
 
 # Create a color palette with COLORBREWER 2.0 to plot FCover
-class5_YlGn <- colorRampPalette(colors = c('#ffffcc','#c2e699','#78c679','#31a354','#006837'))(100) #da rifare
+class5_YlGn <- colorRampPalette(colors = c('#edf8fb','#b2e2e2','#66c2a4','#2ca25f','#006d2c'))(100) 
 plot(FCOVERcrop, col=class5_YlGn)
 
 # Plot FCOVER of each year
@@ -88,7 +85,7 @@ plot(FCOVER2014, main="Forest Cover in 2014", col=class5_YlGn)
 plot(FCOVER2019, main="Forest Cover in 2019", col=class5_YlGn)
 
 # Export file
-pdf("fcover.pdf", width=40, height=20) 
+png("outputs\fcover.png", res = 300, width = 3000, heigh = 2000)
 par(mfrow=c(3,2))
 plot(FCOVER1999, main="Forest Cover in 1999", col=class5_YlGn)
 plot(FCOVER2004, main="Forest Cover in 2004", col=class5_YlGn)
@@ -123,7 +120,7 @@ plot(FCOVER1999, FCOVER2019, xlim=c(0, 1), ylim=c(0, 1), xlab="FCOVER 2014", yla
 abline(0,1, col="red")
 
 #Export them
-pdf("ablineFCOVER.pdf", width=40, height=20) 
+png("outputs\ablineFCOVER.png", res = 300, width = 3000, heigh = 2000)
 par(mfrow=c(3,4))
 plot(FCOVER1999, FCOVER2004, xlim=c(0, 1), ylim=c(0, 1), xlab="FCOVER 1999", ylab="FCOVER 2004")
 abline(0,1, col="red")
@@ -158,7 +155,7 @@ hist(FCOVER2014)
 hist(FCOVER2019)
 
 #Export them
-pdf("histFCOVER.pdf", width=40, height=20) 
+png("outputs\histFCOVER.png", res = 300, width = 3000, heigh = 2000)
 par(mfrow=c(3,2))
 hist(FCOVER1999)
 hist(FCOVER2004)
@@ -188,7 +185,7 @@ plot(dif5, col=class3_RdBu, main = "Difference in Forest Cover between 1999 and 
 plot(dif5, col=class3_RdBu2, main = "Difference in Forest Cover between 1999 and 2019")
 
 # Export
-pdf("fcoverdif.pdf", width=15, height=10) 
+png("outputs\fcoverdif.png", res = 300, width = 3000, heigh = 2000)
 par(mfrow=c(2,3))
 plot(dif5, col=class3_RdBu, main = "Difference in Forest Cover between 1999 and 2019")
 plot(dif5, col=class3_RdBu2, main = "Difference in Forest Cover between 1999 and 2019")
@@ -218,66 +215,69 @@ hist
 abline
 pairs(LAIcrop)
 
-##### tiff
 
+# Palm oil plantations 
 palmoil <- brick("Palm_oil_plantations.tiff")
-palmoil
-plotRGB(palmoil, r=1, g=2, b=3, stretch = "lin")
-
-#Export
-pdf("palmoilplant.pdf", width=10, height=10) 
-par(mfrow=c(2,3))
+# Check output 
+palmoil  # 3 bands: Palm_oil_plantations.1, Palm_oil_plantations.2, Palm_oil_plantations.3
+# Plot the image with plotRGB
+plotRGB(palmoil, r=1, g=2, b=3, stretch = "lin") # True color image
+# Export
+png("outputs/tpalmoilplant.png", res = 300, width = 3000, heigh = 2000)
 plotRGB(palmoil, r=1, g=2, b=3, stretch = "lin")
 dev.off()
 
-hist(palmoil)
-
-
-
-# FCOVER April 2019 in Sarawak - Malaysia
+# FCOVER April 2019 in Sarawak - Malaysia 
 
 malaysia2019 <- raster("c_gls_FCOVER300_201910100000_GLOBE_PROBAV_V1.0.1.nc")
-ext2 <- c(108, 120, -5, 7)
+ext2 <- c(108, 116, 0, 8)
 malaysia2019c <- crop(malaysia2019, ext2)
-# convert raster object into a dataframe
+# Convert raster object into a dataframe to make a ggplot
 malyasia2019_df <- raster::as.data.frame(malaysia2019c, xy=TRUE) 
 
 g6 <- ggplot() + geom_raster(malyasia2019_df, mapping = aes(x=x, y=y, fill=Fraction.of.green.Vegetation.Cover.333m)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in Malaysia in 2019") + labs(fill = "FCOVER")
 
-##### shp from global forest watch
-# https://data.globalforestwatch.org/datasets/gfw::sarawak-oil-palm-concessions/about - April 2019
+# shape file from Global Forest Watch on Oil Palm Concessions and Crops in April 2019
 oilpalm <- readOGR("/Users/sarapiccini/Documents/datandvi/Sarawak_oil_palm_concessions/Sarawak_oil_palm_concessions.shp")
 oilpalm
 plot(oilpalm)
+# Check class and summary
 class()
 summary()
+# Fortify it to make a ggplot
 foilpalm <- fortify(oilpalm)
-
 gfoilpalm <-ggplot() + geom_polygon(data = foilpalm , aes(x = long, y = lat, group = group), fill="#69b3a2", color="white") + theme_void()
 
+# ggplot with FCOVER
 ggoilpalm <- ggplot() + geom_raster(malyasia2019_df, mapping = aes(x = x, y = y, fill = Fraction.of.green.Vegetation.Cover.333m)) + scale_fill_viridis(option="magma") + labs(fill = "FCOVER") +
-geom_polygon(data=foilpalm,aes(x=long, y=lat, group=group), fill="#69b3a2",color="white", lwd=0.1) + theme_void() +
+geom_polygon(data=foilpalm,aes(x=long, y=lat, group=group), fill="transparent", color="black", lwd=0.3) + theme_void() +
 ggtitle("Oil Palm Concessions")
 
-# https://data.globalforestwatch.org/datasets/gfw::sarawak-protected-areas/about - April 2019
+# Shape file from Global Forest Watch on Protected Areas in April 2019
 protectedareas <- readOGR("/Users/sarapiccini/Documents/datandvi/Sarawak_protected_areas/Sarawak_protected_areas.shp")
 protectedareas
 plot(protectedareas)
-class(protectedareas) #SpatialPolygonsDataFrame
+# Check class and summary
+class(protectedareas) 
 summary(protectedareas)
+# Fortify it to make a ggplot
 fprotectedareas <- fortify(protectedareas)
-
 gfprotectedareas <- ggplot() + geom_polygon(data = fprotectedareas, aes(x = long, y = lat, group = group), fill="#69b3a2", color="white") + theme_void()
 
+# ggplot with FCOVER
 ggprotectedareas <- ggplot() + geom_raster(malyasia2019_df, mapping = aes(x = x, y = y, fill = Fraction.of.green.Vegetation.Cover.333m)) + scale_fill_viridis(option="magma") + labs(fill = "FCOVER") +
-geom_polygon(data=fprotectedareas,aes(x=long, y=lat, group=group), fill="#69b3a2",color="white",lwd=0.1) + theme_void() +
+geom_polygon(data=fprotectedareas,aes(x=long, y=lat, group=group), fill="transparent",color="black",lwd=0.5) + theme_void() +
 ggtitle("Protected Areas")
 
 # Plot together
+gfoilpalm + gfprotectedareas
 ggoilpalm + ggprotectedareas
 
 # Export
-pdf("OilPalmCrops_ProtectedAreas.pdf", width=20, height=10) 
+png("outputs\shapefiles.png", res = 300, width = 3000, heigh = 2000)
+gfoilpalm + gfprotectedareas
+dev.off()
+png("outputs\OilPalmCrops_ProtectedAreas.png", res = 300, width = 3000, heigh = 2000)
 ggoilpalm + ggprotectedareas
 dev.off()
 
