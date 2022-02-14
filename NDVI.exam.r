@@ -13,7 +13,7 @@ library(rgdal) # to open shape file (rgdal packages inside this one)
 
 
 # Set the working directory
-setwd("/Users/sarapiccini/Documents/datandvi")
+setwd("/Users/sarapiccini/Documents/datandvi/")
 
 # Importing is one by one 
 FCOVER1999 <- raster("c_FCOVER-RT6_201907200000_GLOBE_PROBAV_V2.0.1.nc")
@@ -48,11 +48,11 @@ FCOVER2014 <- FCOVERcrop$FCOVER.1km.4
 FCOVER2019 <- FCOVERcrop$FCOVER.1km.5
 
 # Convert raster into data frames to use ggplot
-FCOVER1999_df <- raster::as.data.frame(FCOVER1999, xy=TRUE) 
-FCOVER2004_df <- raster::as.data.frame(FCOVER2004, xy=TRUE) 
-FCOVER2009_df <- raster::as.data.frame(FCOVER2009, xy=TRUE) 
-FCOVER2014_df <- raster::as.data.frame(FCOVER2014, xy=TRUE) 
-FCOVER2019_df <- raster::as.data.frame(FCOVER2019, xy=TRUE) 
+FCOVER1999_df <- as.data.frame(FCOVER1999, xy=TRUE) 
+FCOVER2004_df <- as.data.frame(FCOVER2004, xy=TRUE) 
+FCOVER2009_df <- as.data.frame(FCOVER2009, xy=TRUE) 
+FCOVER2014_df <- as.data.frame(FCOVER2014, xy=TRUE) 
+FCOVER2019_df <- as.data.frame(FCOVER2019, xy=TRUE) 
 
 # Plot them with ggplot
 g1 <- ggplot() + geom_raster(FCOVER1999_df, mapping = aes(x=x, y=y, fill=FCOVER.1km.1)) + scale_fill_viridis(option = "magma") + ggtitle("Percentage of forest in 1999") + labs(fill = "FCOVER")
@@ -173,16 +173,16 @@ dif5 <- FCOVER1999 - FCOVER2019
 # I have also tried this one: scale_fill_viridis(direction = -1, option = "magma") with the order of colors reversed but 
 # Create a color palette with COLORBREWER 2.0 
 # x = 0 -> no changes: colored in white
-class3_RdBu <- colorRampPalette(colors = c('#ef8a62','#f7f7f7','#67a9cf'))(100)
-plot(dif5, col=class3_RdBu, main = "Difference in Forest Cover between 1999 and 2019")
+cl1 <- colorRampPalette(colors = c('#ef8a62','#f7f7f7','#67a9cf'))(100)
+plot(dif5, col=cl1, main = "Difference in Fraction of vegetation Cover between 1999 and 2019")
 # x = 0 -> no changes: colored in black
 class3_RdBu2 <- colorRampPalette(colors = c('#ef8a62','#636363','#7fbf7b'))(100)
-plot(dif5, col=class3_RdBu2, main = "Difference in Forest Cover between 1999 and 2019")
+plot(dif5, col=class3_RdBu2, main = "Difference in Fraction of vegetation Cover between 1999 and 2019")
 
 # Plot together
 par(mfrow=c(1,2))
-plot(dif5, col=class3_RdBu, main = "Difference in Forest Cover between 1999 and 2019")
-plot(dif5, col=class3_RdBu2, main = "Difference in Forest Cover between 1999 and 2019")
+plot(dif5, col=class3_RdBu, main = "Difference in Fraction of vegetation Cover between 1999 and 2019")
+plot(dif5, col=class3_RdBu2, main = "Difference in Fraction of vegetation Cover between 1999 and 2019")
 
 # Export
 png("outputs/fcoverdif.png", res = 300, width = 3000, heigh = 4000)
@@ -191,26 +191,61 @@ plot(dif5, col=class3_RdBu, main = "Difference of the Fraction of vegetation cov
 plot(dif5, col=class3_RdBu2, main = "Difference of the Fraction of vegetation cover between 1999 and 2019")
 dev.off()
 
-##### LAI
+# I repeated the same processes as before with LAI data
+
 LAIrlist <- list.files(pattern="LAI") # listing all the files with the pattern present in the directory
 LAIrlist
-LAI2020 <- brick("c_gls_LAI-RT0_202006300000_GLOBE_PROBAV_V2.0.1.nc")
-LAI1999 <- raster("c_gls_LAI_200907310000_GLOBE_VGT_V2.0.1.nc")
-LAI1999 <- raster("c_gls_LAI_199908200000_GLOBE_VGT_V2.0.2.nc")
 
-# to make the list a brick list - apply brick function to all the files (multi-layers)
+# 
 LAIlist_rast <- lapply(LAIrlist, raster) 
 LAIlist_rast
 # creating a stack
 LAIstack <- stack(LAIlist_rast) 
 LAIstack
 plot(LAIstack)
+names(LAIstack) <- c("LAI.1km.1","LAI.1km.2","LAI.1km.3")
 
+
+# Crop the image over Indonesia
+ext <-c(90.5, 120, -10, 10)
 LAIcrop <- crop(LAIstack, ext)
 plot(LAIcrop)
 LAIcrop
 
-ggplot() plasma
+# Separate the_df files, assigning to each element of the crop a name
+LAI1999 <- LAIcrop$LAI.1km.1
+LAI2009 <- LAIcrop$LAI.1km.2
+LAI2020 <- LAIcrop$LAI.1km.3
+
+# Convert raster into data frames to use ggplot
+LAI1999_df <- as.data.frame(LAI1999, xy=TRUE) 
+LAI2009_df <- as.data.frame(LAI2009, xy=TRUE) 
+LAI2020_df <- as.data.frame(LAI2020, xy=TRUE) 
+
+# Plot them with ggplot
+p1 <- ggplot() + geom_raster(LAI1999_df, mapping = aes(x=x, y=y, fill=LAI.1km.1)) + scale_fill_viridis(option = "plasma") + ggtitle("Leaf Area Index in 1999") + labs(fill = "LAI")
+p2 <- ggplot() + geom_raster(LAI2009_df, mapping = aes(x=x, y=y, fill=LAI.1km.2)) + scale_fill_viridis(option = "plasma") + ggtitle("Leaf Area Index in 2009") + labs(fill = "LAI")
+p3 <- ggplot() + geom_raster(LAI2020_df, mapping = aes(x=x, y=y, fill=LAI.1km.3)) + scale_fill_viridis(option = "plasma") + ggtitle("Leaf Area Index in 2020") + labs(fill = "LAI")
+
+# Plot them together
+p1 + p2 + p3
+
+# Export file
+png("outputs/lai_ggplot.png", res = 300, width = 4000, heigh = 2000)
+p1 + p2 + p3
+dev.off()
+
+# # Plot the difference between 1999 and 2019 - Compute the difference between the layers
+difLAI<- LAI1999 - LAI2020
+cl3 <- colorRampPalette(colors = c('#b2182b','#f7f7f7','#1b7837'))(100)
+plot(difLAI, col=cl3, main = "Difference in LAI between 1999 and 2020")
+
+par(mfrow=c(2,2))
+hist(FCOVER1999)
+hist(FCOVER2004)
+hist(FCOVER2009)
+hist(FCOVER2014)
+hist(FCOVER2019)
 hist
 abline
 pairs(LAIcrop)
@@ -234,7 +269,7 @@ malaysia2019 <- raster("c_gls_FCOVER300_201910100000_GLOBE_PROBAV_V1.0.1.nc")
 ext2 <- c(108, 116, 0, 8)
 malaysia2019c <- crop(malaysia2019, ext2)
 # Convert raster object into a dataframe to make a ggplot
-malyasia2019_df <- raster::as.data.frame(malaysia2019c, xy=TRUE) 
+malyasia2019_df <- as.data.frame(malaysia2019c, xy=TRUE) 
 
 g6 <- ggplot() + geom_raster(malyasia2019_df, mapping = aes(x=x, y=y, fill=Fraction.of.green.Vegetation.Cover.333m)) + scale_fill_viridis(option = "magma") + ggtitle("Fraction of vegetation cover in Malaysia in 2019") + labs(fill = "FCOVER")
 
