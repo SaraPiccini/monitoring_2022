@@ -16,7 +16,7 @@ library(rgdal) # to open shape file (rgdal packages inside this one)
 setwd("/Users/sarapiccini/Documents/datandvi")
 
 # Importing is one by one 
-FCOVER1999 <- raster("c_FCOVER_199902280000_GLOBE_VGT_V2.0.2.nc")
+FCOVER1999 <- raster("c_FCOVER-RT6_201907200000_GLOBE_PROBAV_V2.0.1.nc")
 FCOVER1999
 
 # we can also import multiple files at once that have the same pattern in the name (much faster when we have many files to import)
@@ -238,8 +238,8 @@ malyasia2019_df <- raster::as.data.frame(malaysia2019c, xy=TRUE)
 
 g6 <- ggplot() + geom_raster(malyasia2019_df, mapping = aes(x=x, y=y, fill=Fraction.of.green.Vegetation.Cover.333m)) + scale_fill_viridis(option = "magma") + ggtitle("Fraction of vegetation cover in Malaysia in 2019") + labs(fill = "FCOVER")
 
-png("outputs/malaysia.png", res = 300, width = 2000, heigh = 2000))
-g6 <- ggplot() + geom_raster(malyasia2019_df, mapping = aes(x=x, y=y, fill=Fraction.of.green.Vegetation.Cover.333m)) + scale_fill_viridis(option = "magma") + ggtitle("Fraction of vegetation cover in Malaysia in 2019") + labs(fill = "FCOVER")
+png("outputs/malaysia.png", res= 300, width = 2000, heigh = 2000)
+g6 
 dev.off()
 
 # shape file from Global Forest Watch on Oil Palm Concessions and Crops in April 2019
