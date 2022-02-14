@@ -13,7 +13,7 @@ library(rgdal) # to open shape file (rgdal packages inside this one)
 
 
 # Set the working directory
-setwd("/Users/sarapiccini/Documents/datandvi/")
+setwd("/Users/sarapiccini/Documents/dataexam/")
 
 # Importing is one by one 
 FCOVER1999 <- raster("c_FCOVER-RT6_201907200000_GLOBE_PROBAV_V2.0.1.nc")
