@@ -73,25 +73,25 @@ grid.arrange(g1, g2, g3, g4, g5, nrow=3)
 dev.off()
 
 # Create a color palette with COLORBREWER 2.0 to plot FCover
-class5_YlGn <- colorRampPalette(colors = c('#edf8fb','#b2e2e2','#66c2a4','#2ca25f','#006d2c'))(100) 
-plot(FCOVERcrop, col=class5_YlGn)
+cl1 <- colorRampPalette(colors = c('#edf8fb','#b2e2e2','#66c2a4','#2ca25f','#006d2c'))(100) 
+plot(FCOVERcrop, col=cl1)
 
 # Plot FCOVER of each year
 par(mfrow=c(2,3))
-plot(FCOVER1999, main="Forest Cover in 1999", col=class5_YlGn)
-plot(FCOVER2004, main="Forest Cover in 2004", col=class5_YlGn)
-plot(FCOVER2009, main="Forest Cover in 2009", col=class5_YlGn)
-plot(FCOVER2014, main="Forest Cover in 2014", col=class5_YlGn)
-plot(FCOVER2019, main="Forest Cover in 2019", col=class5_YlGn)
+plot(FCOVER1999, main="Forest Cover in 1999", col=cl1)
+plot(FCOVER2004, main="Forest Cover in 2004", col=cl1)
+plot(FCOVER2009, main="Forest Cover in 2009", col=cl1)
+plot(FCOVER2014, main="Forest Cover in 2014", col=cl1)
+plot(FCOVER2019, main="Forest Cover in 2019", col=cl1)
 
 # Export file
 png("outputs/fcover.png", res = 300, width = 3000, heigh = 2000)
 par(mfrow=c(3,2))
-plot(FCOVER1999, main="Forest Cover in 1999", col=class5_YlGn)
-plot(FCOVER2004, main="Forest Cover in 2004", col=class5_YlGn)
-plot(FCOVER2009, main="Forest Cover in 2009", col=class5_YlGn)
-plot(FCOVER2014, main="Forest Cover in 2014", col=class5_YlGn)
-plot(FCOVER2019, main="Forest Cover in 2019", col=class5_YlGn)
+plot(FCOVER1999, main="Forest Cover in 1999", col=cl1)
+plot(FCOVER2004, main="Forest Cover in 2004", col=cl1)
+plot(FCOVER2009, main="Forest Cover in 2009", col=cl1)
+plot(FCOVER2014, main="Forest Cover in 2014", col=cl1)
+plot(FCOVER2019, main="Forest Cover in 2019", col=cl1)
 dev.off()
 
 # Compare fcover between each year with a linear regression model: 
@@ -168,27 +168,27 @@ dev.off()
 pairs(FCOVERcrop)
 
 # Plot the difference between 1999 and 2019 - Compute the difference between the layers
-dif5 <- FCOVER1999 - FCOVER2019
+dif <- FCOVER1999 - FCOVER2019
 
 # I have also tried this one: scale_fill_viridis(direction = -1, option = "magma") with the order of colors reversed but 
 # Create a color palette with COLORBREWER 2.0 
 # x = 0 -> no changes: colored in white
-cl1 <- colorRampPalette(colors = c('#ef8a62','#f7f7f7','#67a9cf'))(100)
-plot(dif5, col=cl1, main = "Difference in Fraction of vegetation Cover between 1999 and 2019")
+cl2 <- colorRampPalette(colors = c('#ca0020','#f7f7f7','#008837'))(100) 
+plot(dif, col=cl2, main = "Difference in Fraction of vegetation Cover between 1999 and 2019")
 # x = 0 -> no changes: colored in black
-class3_RdBu2 <- colorRampPalette(colors = c('#ef8a62','#636363','#7fbf7b'))(100)
-plot(dif5, col=class3_RdBu2, main = "Difference in Fraction of vegetation Cover between 1999 and 2019")
+cl3 <- colorRampPalette(colors = c('#ca0020','#f4a582','#636363','#a6dba0','#008837'))(100)
+plot(dif, col=cl3, main = "Difference in Fraction of vegetation Cover between 1999 and 2019")
 
 # Plot together
 par(mfrow=c(1,2))
-plot(dif5, col=class3_RdBu, main = "Difference in Fraction of vegetation Cover between 1999 and 2019")
-plot(dif5, col=class3_RdBu2, main = "Difference in Fraction of vegetation Cover between 1999 and 2019")
+plot(dif5, col=cl2, main = "Difference in Fraction of vegetation Cover between 1999 and 2019")
+plot(dif5, col=cl3, main = "Difference in Fraction of vegetation Cover between 1999 and 2019")
 
 # Export
 png("outputs/fcoverdif.png", res = 300, width = 3000, heigh = 4000)
 par(mfrow=c(2,1))
-plot(dif5, col=class3_RdBu, main = "Difference of the Fraction of vegetation cover between 1999 and 2019")
-plot(dif5, col=class3_RdBu2, main = "Difference of the Fraction of vegetation cover between 1999 and 2019")
+plot(dif5, col=cl2, main = "Difference of the Fraction of vegetation cover between 1999 and 2019")
+plot(dif5, col=cl3, main = "Difference of the Fraction of vegetation cover between 1999 and 2019")
 dev.off()
 
 # I repeated the same processes as before with LAI data
@@ -207,7 +207,6 @@ names(LAIstack) <- c("LAI.1km.1","LAI.1km.2","LAI.1km.3")
 
 
 # Crop the image over Indonesia
-ext <-c(90.5, 120, -10, 10)
 LAIcrop <- crop(LAIstack, ext)
 plot(LAIcrop)
 LAIcrop
@@ -229,27 +228,34 @@ p3 <- ggplot() + geom_raster(LAI2020_df, mapping = aes(x=x, y=y, fill=LAI.1km.3)
 
 # Plot them together
 p1 + p2 + p3
-
 # Export file
-png("outputs/lai_ggplot.png", res = 300, width = 4000, heigh = 2000)
+png("outputs/lai_ggplot.png", res = 300, width = 6000, heigh = 2000)
 p1 + p2 + p3
 dev.off()
 
-# # Plot the difference between 1999 and 2019 - Compute the difference between the layers
+# Plot the difference between 1999 and 2019 - Compute the difference between the layers
 difLAI<- LAI1999 - LAI2020
-cl3 <- colorRampPalette(colors = c('#b2182b','#f7f7f7','#1b7837'))(100)
+
+# Create a color palette with COLORBREWER 2.0 
+cl4 <- colorRampPalette(colors = c('#ca0020','#f4a582','#f7f7f7','#a6dba0','#008837'))(100)
+
+# Plot the difference with 2 different color ramp palettes
+par(mfrow=c(2,1))
+plot(difLAI, col=cl4, main = "Difference in LAI between 1999 and 2020")
 plot(difLAI, col=cl3, main = "Difference in LAI between 1999 and 2020")
+# Export file
+png("outputs/difLAI.png", res = 300, width = 1500, heigh = 2500)
+par(mfrow=c(2,1))
+plot(difLAI, col=cl4, main = "Difference in LAI between 1999 and 2020")
+plot(difLAI, col=cl3, main = "Difference in LAI between 1999 and 2020")
+dev.off()
 
-par(mfrow=c(2,2))
-hist(FCOVER1999)
-hist(FCOVER2004)
-hist(FCOVER2009)
-hist(FCOVER2014)
-hist(FCOVER2019)
-hist
-abline
+# Plot scatterplot and histograms of LAI 
 pairs(LAIcrop)
-
+# Export file
+png("outputs/pLAI.png", res = 300, width = 4000, heigh = 2000)
+pairs(LAIcrop)
+dev.off()
 
 # Palm oil plantations - ESA data 
 palmoil <- brick("Palm_oil_plantations.tiff")
