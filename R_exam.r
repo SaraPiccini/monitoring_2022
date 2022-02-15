@@ -1,32 +1,42 @@
-# R code for my Monitoring Ecosystem Changes and Functioning exam in 2022
-# Multi-temporal analysis on vegetation in Indonesia and Papua New Guinea with a focus on deforstation 
-# Download data from Copernicus Global Land Service on NDVI and FCOVER 
+# R code for my Monitoring Ecosystem Changes and Functioning exam 
+# Multi-temporal analysis on vegetation in Indonesia and Borneo lowland rain forests with a focus on Oil Palm plantations and Protected Areas in Sarawak (Malaysia)
 
-# Upload all the libraries needed at the beginning - for uploading and visualizing copernicus data in R
+# Install all the packages needed  
+#install.packages("ncdf4")
+#install.packages("raster")
+#install.packages("ggplot2")
+#install.packages("viridis")
+#install.packages("patchwork")
+#install.packages("gridExtra")
+#install.packages("rgdal")
+
+# Upload all the libraries needed at the beginning 
 library(ncdf4) # for formatting our files - to manage spatial data, read and manipulate them (in nc)
 library(raster) # work with raster file (single layer data)
 library(ggplot2) # for plots - to ggplot raster layers - create graphics
 library(viridis) # palette - color scales
-library(patchwork) # for comparing separate ggplots - compose multiple ggplots
-library(gridExtra) # for grid.arrange plotting, creating a multiframe with ggplot
-library(rgdal) # to open shape file (rgdal packages inside this one)
-
+library(patchwork) # for comparing separate ggplots, building a multiframe 
+library(gridExtra) # for grid.arrange plotting, creating a multiframe  
+library(rgdal) # to open shape file 
 
 # Set the working directory
 setwd("/Users/sarapiccini/Documents/dataexam/")
 
-# Importing is one by one 
+# Download data from Copernicus Global Land Service on Fraction of green vegetation Cover (1km V2) - spatial extent of vegetation, independent from illumination direction
+
+# Importing one by one or
 FCOVER1999 <- raster("c_FCOVER-RT6_201907200000_GLOBE_PROBAV_V2.0.1.nc")
 FCOVER1999
 
-# we can also import multiple files at once that have the same pattern in the name (much faster when we have many files to import)
+# Import multiple files at once that have the same pattern in the name (much faster when we have many files to import)
 rlist <- list.files(pattern="c_FCOVER") # listing all the files with the pattern present in the directory
 rlist
 
-# to make the list a brick list - apply brick function to all the files (multi-layers)
+# Make the list a raster list - apply raster function to all the files 
 list_rast <- lapply(rlist, raster) 
 list_rast
-# creating a stack
+
+# Create a stack
 FCOVERstack <- stack(list_rast) 
 FCOVERstack
 
@@ -37,17 +47,17 @@ plot(FCOVERstack)
 # Crop the image over Indonesia
 ext <-c(90.5, 120, -10, 10)
 FCOVERcrop <- crop(FCOVERstack, ext)
-plot(FCOVERcrop)
+plot(FCOVERcrop) # To see if I have cropped the images well
 FCOVERcrop
 
-# and then we separate the_df files, assigning to each element of the crop a name
+# Separate files, assigning to each element of the crop a name
 FCOVER1999 <- FCOVERcrop$FCOVER.1km.1
 FCOVER2004 <- FCOVERcrop$FCOVER.1km.2
 FCOVER2009 <- FCOVERcrop$FCOVER.1km.3
 FCOVER2014 <- FCOVERcrop$FCOVER.1km.4
 FCOVER2019 <- FCOVERcrop$FCOVER.1km.5
 
-# Convert raster into data frames to use ggplot
+# Convert raster into data frames to ggplot them
 FCOVER1999_df <- as.data.frame(FCOVER1999, xy=TRUE) 
 FCOVER2004_df <- as.data.frame(FCOVER2004, xy=TRUE) 
 FCOVER2009_df <- as.data.frame(FCOVER2009, xy=TRUE) 
@@ -257,17 +267,16 @@ png("outputs/pLAI.png", res = 300, width = 4000, heigh = 2000)
 pairs(LAIcrop)
 dev.off()
 
-# Palm oil plantations - ESA data 
+# Oil Palm plantations - ESA data - not used, too many NAs
 palmoil <- brick("Palm_oil_plantations.tiff")
 # Check output 
-palmoil  # 3 bands: Palm_oil_plantations.1, Palm_oil_plantations.2, Palm_oil_plantations.3
+palmoil  # 3 bands(layers): Palm_oil_plantations.1, Palm_oil_plantations.2, Palm_oil_plantations.3
 # Plot the image with plotRGB
 plotRGB(palmoil, r=1, g=2, b=3, stretch = "lin") # True color image
 # Export
 png("outputs/tpalmoilplant.png", res = 300, width = 3000, heigh = 2000)
 plotRGB(palmoil, r=1, g=2, b=3, stretch = "lin")
 dev.off()
-
 
 # FCOVER April 2019 in Sarawak - Malaysia 
 
