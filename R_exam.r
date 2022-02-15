@@ -32,7 +32,7 @@ FCOVER1999
 rlist <- list.files(pattern="c_FCOVER") # listing all the files with the pattern present in the directory
 rlist
 
-# Make the list a raster list - apply raster function to all the files 
+# Make the list a raster list - apply raster function to all the files to create raster layer objects
 list_rast <- lapply(rlist, raster) 
 list_rast
 
@@ -44,7 +44,7 @@ FCOVERstack
 names(FCOVERstack) <- c("FCOVER.1km.1","FCOVER.1km.2","FCOVER.1km.3","FCOVER.1km.4","FCOVER.1km.5")
 plot(FCOVERstack)
 
-# Crop the image over Indonesia
+# Crop over Indonesia
 ext <-c(90.5, 120, -10, 10)
 FCOVERcrop <- crop(FCOVERstack, ext)
 plot(FCOVERcrop) # To see if I have cropped the images well
@@ -57,7 +57,7 @@ FCOVER2009 <- FCOVERcrop$FCOVER.1km.3
 FCOVER2014 <- FCOVERcrop$FCOVER.1km.4
 FCOVER2019 <- FCOVERcrop$FCOVER.1km.5
 
-# Convert raster into data frames to ggplot them
+# Convert raster into data frames to ggplot them - coercing them
 FCOVER1999_df <- as.data.frame(FCOVER1999, xy=TRUE) 
 FCOVER2004_df <- as.data.frame(FCOVER2004, xy=TRUE) 
 FCOVER2009_df <- as.data.frame(FCOVER2009, xy=TRUE) 
@@ -74,7 +74,7 @@ g5 <- ggplot() + geom_raster(FCOVER2019_df, mapping = aes(x=x, y=y, fill=FCOVER.
 # I have also tried this one: scale_fill_viridis(direction = -1, option = "magma") with the order of colors reversed but it does not work well
 # Plot them together (multiframe ggplot) with grid.arrange function (from gridExtra package)
 grid.arrange(g1, g2, g3, g4, g5, nrow=3)
-#or with patchwork package 
+#or through patchwork package 
 g2 + g1 + g3 / g4 + g5
 
 # Export file
@@ -104,7 +104,7 @@ plot(FCOVER2014, main="Forest Cover in 2014", col=cl1)
 plot(FCOVER2019, main="Forest Cover in 2019", col=cl1)
 dev.off()
 
-# Compare fcover between each year with a linear regression model: 
+# Compare fcover between each year with a linear regression model (scatterplot): 
 par(mfrow=c(3,4))
 plot(FCOVER1999, FCOVER2004, xlim=c(0, 1), ylim=c(0, 1), xlab="FCOVER 1999", ylab="FCOVER 2004")
 abline(0,1, col="red")
@@ -156,7 +156,7 @@ plot(FCOVER1999, FCOVER2019, xlim=c(0, 1), ylim=c(0, 1), xlab="FCOVER 2014", yla
 abline(0,1, col="red")
 dev.off()
 
-# Plot frequency distribution of data: frequecies : how pixels are distributed in each different class - frequencies of each classes
+# Plot frequency distribution of data with histograms 
 par(mfrow=c(3,2))
 hist(FCOVER1999)
 hist(FCOVER2004)
@@ -174,18 +174,19 @@ hist(FCOVER2014)
 hist(FCOVER2019)
 dev.off()
 
-# Or use pairs function: density plot (histograms), scatterplot, and Pearson coefficient
+# Or use pairs function (pairs plot): matrix of scatterplots
 pairs(FCOVERcrop)
 
 # Plot the difference between 1999 and 2019 - Compute the difference between the layers
 dif <- FCOVER1999 - FCOVER2019
 
 # I have also tried this one: scale_fill_viridis(direction = -1, option = "magma") with the order of colors reversed but 
-# Create a color palette with COLORBREWER 2.0 
-# x = 0 -> no changes: colored in white
+
+# Create two color palettes with COLORBREWER 2.0 
+# x = 0 -> no changes
 cl2 <- colorRampPalette(colors = c('#ca0020','#f7f7f7','#008837'))(100) 
 plot(dif, col=cl2, main = "Difference in Fraction of vegetation Cover between 1999 and 2019")
-# x = 0 -> no changes: colored in black
+# x = 0 -> no changes
 cl3 <- colorRampPalette(colors = c('#ca0020','#f4a582','#636363','#a6dba0','#008837'))(100)
 plot(dif, col=cl3, main = "Difference in Fraction of vegetation Cover between 1999 and 2019")
 
@@ -201,32 +202,30 @@ plot(dif5, col=cl2, main = "Difference of the Fraction of vegetation cover betwe
 plot(dif5, col=cl3, main = "Difference of the Fraction of vegetation cover between 1999 and 2019")
 dev.off()
 
+
+# Download data from Copernicus Global Land Service on Leaf Area Index (1km V2) that quantifies the thickness of the vegetation cover
+
 # I repeated the same processes as before with LAI data
-
-LAIrlist <- list.files(pattern="LAI") # listing all the files with the pattern present in the directory
-LAIrlist
-
-# 
-LAIlist_rast <- lapply(LAIrlist, raster) 
+LAIlist <- list.files(pattern="LAI") # listing all the files with the pattern present in the directory
+LAIlist
+# Apply raster function to all the files
+LAIlist_rast <- lapply(LAIlist, raster) 
 LAIlist_rast
-# creating a stack
+# Create a stack
 LAIstack <- stack(LAIlist_rast) 
 LAIstack
-plot(LAIstack)
+# Change variables'names 
 names(LAIstack) <- c("LAI.1km.1","LAI.1km.2","LAI.1km.3")
-
-
-# Crop the image over Indonesia
+plot(LAIstack)
+# Crop over Indonesia
 LAIcrop <- crop(LAIstack, ext)
 plot(LAIcrop)
 LAIcrop
-
-# Separate the_df files, assigning to each element of the crop a name
+# Separate files, assigning to each element of the crop a name
 LAI1999 <- LAIcrop$LAI.1km.1
 LAI2009 <- LAIcrop$LAI.1km.2
 LAI2020 <- LAIcrop$LAI.1km.3
-
-# Convert raster into data frames to use ggplot
+# Convert raster into data frames to ggplot them
 LAI1999_df <- as.data.frame(LAI1999, xy=TRUE) 
 LAI2009_df <- as.data.frame(LAI2009, xy=TRUE) 
 LAI2020_df <- as.data.frame(LAI2020, xy=TRUE) 
@@ -243,13 +242,13 @@ png("outputs/lai_ggplot.png", res = 300, width = 6000, heigh = 2000)
 p1 + p2 + p3
 dev.off()
 
-# Plot the difference between 1999 and 2019 - Compute the difference between the layers
+# Plot the difference between 1999 and 2020:
 difLAI<- LAI1999 - LAI2020
 
 # Create a color palette with COLORBREWER 2.0 
 cl4 <- colorRampPalette(colors = c('#ca0020','#f4a582','#f7f7f7','#a6dba0','#008837'))(100)
 
-# Plot the difference with 2 different color ramp palettes
+# Plot the difference with 2 different color palettes
 par(mfrow=c(2,1))
 plot(difLAI, col=cl4, main = "Difference in LAI between 1999 and 2020")
 plot(difLAI, col=cl3, main = "Difference in LAI between 1999 and 2020")
@@ -260,12 +259,13 @@ plot(difLAI, col=cl4, main = "Difference in LAI between 1999 and 2020")
 plot(difLAI, col=cl3, main = "Difference in LAI between 1999 and 2020")
 dev.off()
 
-# Plot scatterplot and histograms of LAI 
+# Plot scatterplots, histograms and Pearson correlation coefficient of LAI 
 pairs(LAIcrop)
 # Export file
 png("outputs/pLAI.png", res = 300, width = 4000, heigh = 2000)
 pairs(LAIcrop)
 dev.off()
+
 
 # Oil Palm plantations - ESA data - not used, too many NAs
 palmoil <- brick("Palm_oil_plantations.tiff")
@@ -273,32 +273,32 @@ palmoil <- brick("Palm_oil_plantations.tiff")
 palmoil  # 3 bands(layers): Palm_oil_plantations.1, Palm_oil_plantations.2, Palm_oil_plantations.3
 # Plot the image with plotRGB
 plotRGB(palmoil, r=1, g=2, b=3, stretch = "lin") # True color image
-# Export
-png("outputs/tpalmoilplant.png", res = 300, width = 3000, heigh = 2000)
-plotRGB(palmoil, r=1, g=2, b=3, stretch = "lin")
-dev.off()
+
+
+# Download data from Copernicus Global Land Service on Fraction of green vegetation Cover (300m V1) to have a higher resolution image
 
 # FCOVER April 2019 in Sarawak - Malaysia 
-
+# Repeat same processes as before
+# Import and use raster function
 malaysia2019 <- raster("c_gls_FCOVER300_201910100000_GLOBE_PROBAV_V1.0.1.nc")
+# Crop the image over Sarawak state
 ext2 <- c(108, 116, 0, 8)
 malaysia2019c <- crop(malaysia2019, ext2)
 # Convert raster object into a dataframe to make a ggplot
 malyasia2019_df <- as.data.frame(malaysia2019c, xy=TRUE) 
-
+# ggplot
 g6 <- ggplot() + geom_raster(malyasia2019_df, mapping = aes(x=x, y=y, fill=Fraction.of.green.Vegetation.Cover.333m)) + scale_fill_viridis(option = "magma") + ggtitle("Fraction of vegetation cover in Malaysia in 2019") + labs(fill = "FCOVER")
-
+# Export it
 png("outputs/malaysia.png", res= 300, width = 2000, heigh = 2000)
 g6 
 dev.off()
 
-# shape file from Global Forest Watch on Oil Palm Concessions and Crops in April 2019
-oilpalm <- readOGR("/Users/sarapiccini/Documents/datandvi/Sarawak_oil_palm_concessions/Sarawak_oil_palm_concessions.shp")
-oilpalm
-plot(oilpalm)
-# Check class and summary
-class()
-summary()
+
+# Download shape file from Global Forest Watch on Oil Palm Concessions and Plantations in April 2019
+# Import and use readOGR function: reads an OGR data source and layer into a suitable Spatial vector object
+oilpalm <- readOGR("/Users/sarapiccini/Documents/dataexam/Sarawak_oil_palm_concessions/Sarawak_oil_palm_concessions.shp")
+oilpalm # Check class: SpatialPolygonsDataFrame 
+
 # Fortify it to make a ggplot
 foilpalm <- fortify(oilpalm)
 gfoilpalm <-ggplot() + geom_polygon(data = foilpalm , aes(x = long, y = lat, group = group), fill="#69b3a2", color="white") + theme_void()
@@ -308,13 +308,11 @@ ggoilpalm <- ggplot() + geom_raster(malyasia2019_df, mapping = aes(x = x, y = y,
 geom_polygon(data=foilpalm,aes(x=long, y=lat, group=group), fill="transparent", color="black", lwd=0.3) + theme_void() +
 ggtitle("Oil Palm Concessions")
 
-# Shape file from Global Forest Watch on Protected Areas in April 2019
-protectedareas <- readOGR("/Users/sarapiccini/Documents/datandvi/Sarawak_protected_areas/Sarawak_protected_areas.shp")
-protectedareas
-plot(protectedareas)
-# Check class and summary
-class(protectedareas) 
-summary(protectedareas)
+# Download shape file from Global Forest Watch on Protected Areas in April 2019
+# Import and use readOGR function
+protectedareas <- readOGR("/Users/sarapiccini/Documents/dataexam/Sarawak_protected_areas/Sarawak_protected_areas.shp")
+protectedareas # Check class: SpatialPolygonsDataFrame
+
 # Fortify it to make a ggplot
 fprotectedareas <- fortify(protectedareas)
 gfprotectedareas <- ggplot() + geom_polygon(data = fprotectedareas, aes(x = long, y = lat, group = group), fill="#69b3a2", color="white") + theme_void()
@@ -324,8 +322,9 @@ ggprotectedareas <- ggplot() + geom_raster(malyasia2019_df, mapping = aes(x = x,
 geom_polygon(data=fprotectedareas,aes(x=long, y=lat, group=group), fill="transparent",color="black",lwd=0.5) + theme_void() +
 ggtitle("Protected Areas")
 
-# Plot together
+# Plot together (shape files ggplot)
 gfoilpalm + gfprotectedareas
+# Plot together (shape files and FCOVERggplot)
 ggoilpalm + ggprotectedareas
 
 # Export
