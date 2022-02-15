@@ -1,5 +1,5 @@
 # R code for my Monitoring Ecosystem Changes and Functioning exam 
-# Multi-temporal analysis on vegetation in Indonesia and Borneo lowland rain forests with a focus on Oil Palm plantations and Protected Areas in Sarawak (Malaysia)
+# Multi-temporal analysis on vegetation in a parto of Indonesia and Borneo lowland rain forests, Malaysia, with a focus on Oil Palm plantations and Protected Areas in Sarawak (Malaysia)
 
 # Install all the packages needed  
 #install.packages("ncdf4")
@@ -46,6 +46,7 @@ plot(FCOVERstack)
 
 # Crop over Indonesia
 ext <-c(90.5, 120, -10, 10)
+ext <-c(90.5, 130, -10, 1)
 FCOVERcrop <- crop(FCOVERstack, ext)
 plot(FCOVERcrop) # To see if I have cropped the images well
 FCOVERcrop
@@ -222,7 +223,6 @@ LAIstack <- stack(LAIlist_rast)
 LAIstack
 # Change variables'names 
 names(LAIstack) <- c("LAI.1km.1","LAI.1km.2","LAI.1km.3")
-plot(LAIstack)
 # Crop over Indonesia
 LAIcrop <- crop(LAIstack, ext)
 plot(LAIcrop)
@@ -244,7 +244,7 @@ p3 <- ggplot() + geom_raster(LAI2020_df, mapping = aes(x=x, y=y, fill=LAI.1km.3)
 # Plot them together
 p1 + p2 + p3
 # Export file
-png("outputs/lai_ggplot.png", res = 300, width = 6000, heigh = 2000)
+png("outputs/lai_ggplot.png", res = 300, width = 7000, heigh = 2000)
 p1 + p2 + p3
 dev.off()
 
