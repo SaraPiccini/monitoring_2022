@@ -276,14 +276,6 @@ pairs(LAIcrop)
 dev.off()
 
 
-# Oil Palm plantations - ESA data - not used, too many NAs
-palmoil <- brick("Palm_oil_plantations.tiff")
-# Check output 
-palmoil  # 3 bands(layers): Palm_oil_plantations.1, Palm_oil_plantations.2, Palm_oil_plantations.3
-# Plot the image with plotRGB
-plotRGB(palmoil, r=1, g=2, b=3, stretch = "lin") # True color image
-
-
 # Download data from Copernicus Global Land Service on Fraction of green vegetation Cover (300m V1) to have a higher resolution image
 
 # FCOVER April 2019 in Sarawak - Malaysia 
