@@ -190,16 +190,22 @@ plot(dif, col=cl2, main = "Difference in Fraction of vegetation Cover between 19
 cl3 <- colorRampPalette(colors = c('#ca0020','#f4a582','#636363','#a6dba0','#008837'))(100)
 plot(dif, col=cl3, main = "Difference in Fraction of vegetation Cover between 1999 and 2019")
 
+# Create another color palettes with the amount of forest loss in yellow because this color catches our eyes more than the other colors
+cl5 <- colorRampPalette(colors = c('darkblue','yelloW','red','black'))(100)
+plot(dif, col=cl5, main = "Difference in Fraction of vegetation Cover between 1999 and 2019")
+
 # Plot together
-par(mfrow=c(1,2))
-plot(dif5, col=cl2, main = "Difference in Fraction of vegetation Cover between 1999 and 2019")
-plot(dif5, col=cl3, main = "Difference in Fraction of vegetation Cover between 1999 and 2019")
+par(mfrow=c(2,2))
+plot(dif, col=cl2, main = "Difference in Fraction of vegetation Cover between 1999 and 2019")
+plot(dif, col=cl3, main = "Difference in Fraction of vegetation Cover between 1999 and 2019")
+plot(dif, col=cl5, main = "Difference in Fraction of vegetation Cover between 1999 and 2019")
 
 # Export
-png("outputs/fcoverdif.png", res = 300, width = 3000, heigh = 4000)
-par(mfrow=c(2,1))
-plot(dif5, col=cl2, main = "Difference of the Fraction of vegetation cover between 1999 and 2019")
-plot(dif5, col=cl3, main = "Difference of the Fraction of vegetation cover between 1999 and 2019")
+png("outputs/fcoverdif.png", res = 300, width = 4000, heigh = 4000)
+par(mfrow=c(2,2))
+plot(dif, col=cl2, main = "Difference of the Fraction of vegetation cover between 1999 and 2019")
+plot(dif, col=cl3, main = "Difference of the Fraction of vegetation cover between 1999 and 2019")
+plot(dif, col=cl5, main = "Difference in Fraction of vegetation Cover between 1999 and 2019")
 dev.off()
 
 
@@ -248,15 +254,18 @@ difLAI<- LAI1999 - LAI2020
 # Create a color palette with COLORBREWER 2.0 
 cl4 <- colorRampPalette(colors = c('#ca0020','#f4a582','#f7f7f7','#a6dba0','#008837'))(100)
 
-# Plot the difference with 2 different color palettes
+# Plot the difference with 3 different color palettes
 par(mfrow=c(2,1))
 plot(difLAI, col=cl4, main = "Difference in LAI between 1999 and 2020")
 plot(difLAI, col=cl3, main = "Difference in LAI between 1999 and 2020")
+plot(difLAI, col=cl5, main = "Difference in LAI between 1999 and 2020")
+
 # Export file
-png("outputs/difLAI.png", res = 300, width = 1500, heigh = 2500)
-par(mfrow=c(2,1))
+png("outputs/difLAI.png", res = 300, width = 4000, heigh = 2500)
+par(mfrow=c(2,2))
 plot(difLAI, col=cl4, main = "Difference in LAI between 1999 and 2020")
 plot(difLAI, col=cl3, main = "Difference in LAI between 1999 and 2020")
+plot(difLAI, col=cl5, main = "Difference in LAI between 1999 and 2020")
 dev.off()
 
 # Plot scatterplots, histograms and Pearson correlation coefficient of LAI 
