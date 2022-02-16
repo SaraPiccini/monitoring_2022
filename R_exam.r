@@ -14,7 +14,7 @@
 library(ncdf4) # for formatting our files - to manage spatial data, read and manipulate them (in nc)
 library(raster) # work with raster file (single layer data)
 library(ggplot2) # for plots - to ggplot raster layers - create graphics
-library(viridis) # palette - color scales
+library(viridis) # colorblind friendly palettes 
 library(patchwork) # for comparing separate ggplots, building a multiframe 
 library(gridExtra) # for grid.arrange plotting, creating a multiframe  
 library(rgdal) # to open shape file 
@@ -46,7 +46,6 @@ plot(FCOVERstack)
 
 # Crop over Indonesia
 ext <-c(90.5, 120, -10, 10)
-ext <-c(90.5, 130, -10, 1)
 FCOVERcrop <- crop(FCOVERstack, ext)
 plot(FCOVERcrop) # To see if I have cropped the images well
 FCOVERcrop
@@ -181,17 +180,14 @@ pairs(FCOVERcrop)
 # Plot the difference between 1999 and 2019 - Compute the difference between the layers
 dif <- FCOVER1999 - FCOVER2019
 
-# I have also tried this one: scale_fill_viridis(direction = -1, option = "magma") with the order of colors reversed but 
-
 # Create two color palettes with COLORBREWER 2.0 
-# x = 0 -> no changes
 cl2 <- colorRampPalette(colors = c('#ca0020','#f7f7f7','#008837'))(100) 
 plot(dif, col=cl2, main = "Difference in Fraction of vegetation Cover between 1999 and 2019")
-# x = 0 -> no changes
+
 cl3 <- colorRampPalette(colors = c('#ca0020','#f4a582','#636363','#a6dba0','#008837'))(100)
 plot(dif, col=cl3, main = "Difference in Fraction of vegetation Cover between 1999 and 2019")
 
-# Create another color palettes with the amount of forest loss in yellow because this color catches our eyes more than the other colors
+# Create another color palettes with the amount of forest gain in yellow because this color catches our eyes more than the other colors
 cl5 <- colorRampPalette(colors = c('darkblue','yelloW','red','black'))(100)
 plot(dif, col=cl5, main = "Difference in Fraction of vegetation Cover between 1999 and 2019")
 
@@ -255,7 +251,7 @@ difLAI<- LAI1999 - LAI2020
 cl4 <- colorRampPalette(colors = c('#ca0020','#f4a582','#f7f7f7','#a6dba0','#008837'))(100)
 
 # Plot the difference with 3 different color palettes
-par(mfrow=c(2,1))
+par(mfrow=c(2,2))
 plot(difLAI, col=cl4, main = "Difference in LAI between 1999 and 2020")
 plot(difLAI, col=cl3, main = "Difference in LAI between 1999 and 2020")
 plot(difLAI, col=cl5, main = "Difference in LAI between 1999 and 2020")
