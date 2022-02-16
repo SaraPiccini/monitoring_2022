@@ -78,7 +78,7 @@ grid.arrange(g1, g2, g3, g4, g5, nrow=3)
 g2 + g1 + g3 / g4 + g5
 
 # Export file
-png("outputs/fcover_ggplot.png", res = 300, width = 3000, heigh = 2000)
+png("outputs/fcover_ggplot.png", res = 300, width = 3000, heigh = 3000)
 grid.arrange(g1, g2, g3, g4, g5, nrow=3)
 dev.off()
 
