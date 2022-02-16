@@ -1,17 +1,17 @@
 # R code for my Monitoring Ecosystem Changes and Functioning exam 
-# Multi-temporal analysis on vegetation in a parto of Indonesia and Borneo lowland rain forests, Malaysia, with a focus on Oil Palm plantations and Protected Areas in Sarawak (Malaysia)
+# Multi-temporal analysis on vegetation in West Indonesia and Borneo lowland rain forests, Malaysia, with a focus on Oil Palm plantations and Protected Areas in Sarawak state
 
-# Install all the packages needed  
-#install.packages("ncdf4")
-#install.packages("raster")
-#install.packages("ggplot2")
-#install.packages("viridis")
-#install.packages("patchwork")
-#install.packages("gridExtra")
-#install.packages("rgdal")
+# Install all the packages needed (as comments since I have alredy installed them)
+# install.packages("ncdf4")
+# install.packages("raster")
+# install.packages("ggplot2")
+# install.packages("viridis")
+# install.packages("patchwork")
+# install.packages("gridExtra")
+# install.packages("rgdal")
 
 # Upload all the libraries needed at the beginning 
-library(ncdf4) # for formatting our files - to manage spatial data, read and manipulate them (in nc)
+library(ncdf4) # for formatting our files - to manage spatial data from Copernicus, read and manipulate them (in nc)
 library(raster) # work with raster file (single layer data)
 library(ggplot2) # for plots - to ggplot raster layers - create graphics
 library(viridis) # colorblind friendly palettes 
