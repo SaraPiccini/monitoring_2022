@@ -12,7 +12,7 @@ l1992 <- brick ("defor1_.jpg") #image of 1992 (satellite image)
 l1992
 #names: defor1_.1, defor1_.2, defor1_.3 
 #make the plot
-plotRGB(l1992, r=1, g=2, b=3, stretch="Lin") #amatogrosso forest
+plotRGB(l1992, r=1, g=2, b=3, stretch="Lin") # Mato Grosso forest
 #put the near infra-red in the red component
 #defor1_.1= near infra-red (everything is becoming red because plant reflects a lor in the NIR)
 #defor1_.2 = red
@@ -46,7 +46,7 @@ plotRGB(l2006, r=1, g=2, b=3, stretch="Lin")
 #the use of the index DVI (aborb red, reflect NIR because of the palisate tissue on the mesofille: lambda NIR-lambda R)
 #if there is vegetation the index is high because the reflectans in NIR is bigger than in the R
 #three layers in our image: NIR red and green: we are going to use the red and the NIR.
-#a pixel of forest -> high vaure of reflectans in NIr and small in the R. layer NIR high value - layer R small value = new layer of DVI with high value
+#a pixel of forest -> high vaure of reflectans in NIr and small in the R. layer NIR high value - layer R small value = new layer of NDVI with high value
 #calculate energy in 1992 (Rio de Janeiro doc)
 dev.off() #function in R - close plotting device
 dvi1992 <- l1992$defor1_.1 - l1992$defor1_.2
@@ -70,7 +70,7 @@ cld <- colorRampPalette(c("blue", "white", "red"))(100)
 plot(dvidif, col=cld)
 #everything which is red passed from a high value in 1992 to a low value in 2006 - big loss of energy
 
-#final plot: original images (1992 and 2006), dvis (1992 and 2006), final dvi difference
+#final plot: original images (1992 and 2006), NDVI (1992 and 2006), final NDVI difference
 #3 rows and 2 columns
 par(mfrow=c(3,2))
 plotRGB(l1992, r=1, g=2, b=3, stretch="Lin")
